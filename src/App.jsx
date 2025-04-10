@@ -4,6 +4,8 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import MainLayout from "./layouts/MainLayout";
 import Navbar from "./components/navigation/Navbar";
+// import axios from "axios";
+// axios.defaults.withCredentials = true;
 
 function App() {
   return (

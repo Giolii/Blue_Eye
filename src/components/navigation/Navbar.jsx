@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { useState } from "react";
+import ThemeToggle from "../reusable/ThemeToggle";
 
 const Navbar = () => {
   const { currentUser, logout, guestLogin } = useAuth();
@@ -38,8 +39,15 @@ const Navbar = () => {
           >
             Register
           </Link>
+          <div
+            className="text-xl font-bold tracking-tight hover:opacity-90 transition-colors cursor-pointer"
+            onClick={guestLogin}
+          >
+            Guest
+          </div>
         </>
       )}
+      <ThemeToggle />
     </nav>
   );
 };

@@ -12,51 +12,43 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem("token") || null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (token) {
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    } else {
-      delete axios.defaults.headers.common["Authorization"];
-    }
-  }, [token]);
-
-  useEffect(() => {
-    const verifyToken = async () => {
-      if (!token) {
-        setLoading(false);
-        return;
-      }
+    const verifyAuth = async () => {
       try {
-        const response = await axios.get(`${API_URL}/auth/me`);
+        const response = await axios.get(`${API_URL}/auth/me`, {
+          withCredentials: true,
+        });
         setCurrentUser(response.data.user);
       } catch (error) {
-        console.error("Token verification failed:", error);
-        logout();
+        if (error.status !== 401) {
+          console.error("User verification failed:", error);
+        }
+        setCurrentUser(null);
       } finally {
         setLoading(false);
       }
     };
-    verifyToken();
-  }, [token]);
+    verifyAuth();
+  }, []);
 
   const login = async (emailOrUsername, password) => {
     try {
       setError("");
       setLoading(true);
 
-      const response = await axios.post(`${API_URL}/auth/login`, {
-        emailOrUsername,
-        password,
-      });
-      const { token, user } = response.data;
+      const response = await axios.post(
+        `${API_URL}/auth/login`,
+        {
+          emailOrUsername,
+          password,
+        },
+        { withCredentials: true }
+      );
+      const { user } = response.data;
 
-      localStorage.setItem("token", token);
-
-      setToken(token);
       setCurrentUser(user);
 
       return user;
@@ -73,13 +65,14 @@ export function AuthProvider({ children }) {
       setError("");
       setLoading(true);
 
-      const response = await axios.post(`${API_URL}/auth/guest`);
+      const response = await axios.post(
+        `${API_URL}/auth/guest`,
+        {},
+        { withCredentials: true }
+      );
 
-      const { token, user } = response.data;
+      const { user } = response.data;
 
-      localStorage.setItem("token", token);
-
-      setToken(token);
       setCurrentUser(user);
 
       return user;
@@ -96,30 +89,35 @@ export function AuthProvider({ children }) {
       setError("");
       setLoading(true);
 
-      const response = await axios.post(`${API_URL}/auth/register`, {
-        username,
-        email,
-        password,
-      });
+      const response = await axios.post(
+        `${API_URL}/auth/register`,
+        {
+          username,
+          email,
+          password,
+        },
+        { withCredentials: true }
+      );
       return response.data;
     } catch (error) {
-      setError(error.response?.data.message) || "Failed to register";
+      setError(error.response?.data.message || "Failed to register");
       throw error;
     } finally {
       setLoading(false);
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    setToken(null);
-    setCurrentUser(null);
-    delete axios.defaults.headers.common["Authorization"];
+  const logout = async () => {
+    try {
+      await axios.post(`${API_URL}/auth/logout`, {}, { withCredentials: true });
+      setCurrentUser(null);
+    } catch (error) {
+      setError(error.response?.data.message || "Logout error");
+    }
   };
 
   const value = {
     currentUser,
-    token,
     error,
     loading,
     login,

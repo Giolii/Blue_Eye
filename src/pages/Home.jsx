@@ -1,9 +1,20 @@
-import { useAuth } from "../contexts/AuthContext";
+import PostComposer from "../components/PostComposer";
+import PostFeed from "../components/PostFeed";
+import ScrollToTopButton from "../components/reusable/ScrollToTopButton";
+import { useScroll } from "../contexts/ScrollContext";
 
 const Home = () => {
-  const { currentUser } = useAuth();
-
-  return <h1 className="text-amber-50">HI, {currentUser?.username}</h1>;
+  const { mainContentRef } = useScroll();
+  return (
+    <main
+      className="flex-grow p-5 container flex flex-col  overflow-y-auto relative"
+      ref={mainContentRef}
+    >
+      <ScrollToTopButton />
+      <PostComposer />
+      <PostFeed />
+    </main>
+  );
 };
 
 export default Home;

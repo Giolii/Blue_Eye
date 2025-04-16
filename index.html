@@ -11,6 +11,7 @@
   <title>Last</title>
   <script>
     // Check theme preference and doesn't show a white flash when page is reloaded
+
     if (
       localStorage.theme === 'dark' ||
       (!('theme' in localStorage) &&
@@ -20,6 +21,8 @@
     } else {
       document.documentElement.classList.remove('dark');
     }
+
+
   </script>
 </head>
 

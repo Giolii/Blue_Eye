@@ -1,31 +1,12 @@
-function timeAgo(timestamp) {
-  const date = new Date(timestamp);
+function timeAgo(dateString) {
+  const date = new Date(dateString);
   const now = new Date();
-  const secondsAgo = Math.floor((now - date) / 1000);
+  const diffInSeconds = Math.floor((now - date) / 1000);
 
-  const intervals = {
-    year: 31536000,
-    month: 2592000,
-    week: 604800,
-    day: 86400,
-    hour: 3600,
-    minute: 60,
-    secod: 1,
-  };
-
-  if (secondsAgo < 0) {
-    return "in the future";
-  }
-
-  for (const [unit, secondsInUnit] of Object.entries(intervals)) {
-    const interval = Math.floor(secondsAgo / secondsInUnit);
-
-    if (interval >= 1) {
-      const suffix = interval === 1 ? "" : "s";
-      return `${interval} ${unit}${suffix} ago`;
-    }
-  }
-  return "just now";
+  if (diffInSeconds < 60) return `${diffInSeconds}s ago`;
+  if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+  if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+  return `${Math.floor(diffInSeconds / 86400)}d ago`;
 }
 
 export default timeAgo;

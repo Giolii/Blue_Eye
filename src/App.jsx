@@ -10,7 +10,7 @@ import Sidebar from "./components/navigation/Sidebar";
 
 function App() {
   return (
-    <div className="flex  h-screen">
+    <div className="flex  h-screen justify-center ">
       <Sidebar />
       <Routes>
         <Route element={<MainLayout />}>

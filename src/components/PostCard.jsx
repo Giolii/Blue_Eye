@@ -1,0 +1,162 @@
+import { Heart, MessageCircle, Share, Clock } from "lucide-react";
+import timeAgo from "../utils/timeAgo";
+import DotsMenu from "./DotsMenu";
+import { useEffect, useRef, useState } from "react";
+import { usePosts } from "../contexts/PostContext";
+import ProfileTooltip from "./reusable/ProfileTooltip";
+import { useAuth } from "../contexts/AuthContext";
+
+const PostCard = ({ post }) => {
+  const [editPost, setEditPost] = useState(false);
+  const [editDraft, setEditDraft] = useState(post.content);
+  const [contentHeight, setContentHeight] = useState("auto");
+  const contentRef = useRef(null);
+  const editRef = useRef(null);
+  const { updatePost } = usePosts();
+  const { currentUser } = useAuth();
+
+  useEffect(() => {
+    if (editPost) {
+      // Get the height of the edit container
+      const editHeight = editRef.current
+        ? editRef.current.scrollHeight
+        : "auto";
+      setContentHeight(`${editHeight}px`);
+    } else {
+      // Get the height of the content container
+      const viewHeight = contentRef.current
+        ? contentRef.current.scrollHeight
+        : "auto";
+      setContentHeight(`${viewHeight}px`);
+    }
+  }, [editPost]);
+
+  const handleUpdate = async () => {
+    try {
+      if (editDraft === post.content) return;
+      if (!editDraft.trim()) return handleCancel();
+      const response = await updatePost(post.id, editDraft);
+      setEditPost(false);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  const handleCancel = () => {
+    setEditDraft(post.content);
+    setEditPost(false);
+  };
+
+  const handleEditInput = (e) => {
+    setEditDraft(e.target.value);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Escape") {
+      handleCancel();
+    }
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleUpdate();
+    }
+  };
+
+  return (
+    <>
+      <div className="flex items-start gap-3">
+        {/* Avatar placeholder */}
+        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-300 to-blue-500 flex items-center justify-center text-cyan-900 font-bold group relative">
+          {post.user && <img src={post.user.avatar} alt="Avatar" />}
+          {currentUser.id !== post.userId && (
+            <ProfileTooltip user={post.user} />
+          )}
+        </div>
+        <div className="flex-1">
+          {/* Post header */}
+          <div className="flex items-center justify-between mb-1 ">
+            <div className="flex items-center gap-2">
+              <span className="font-semibold text-amber-50">
+                {post.user ? post.user.username : "Unknown User"}
+              </span>
+              <span className="text-amber-50/50 text-xs flex items-center gap-1">
+                <Clock size={12} />
+                {post.createdAt ? timeAgo(post.createdAt) : "Just now"}
+              </span>
+            </div>
+            <DotsMenu setEditPost={setEditPost} post={post} />
+          </div>
+
+          {/* Post content */}
+          <div
+            className="overflow-hidden transition-all duration-300 ease-in-out mb-3"
+            style={{ height: contentHeight }}
+          >
+            {editPost ? (
+              <>
+                {/* Edit mode */}
+                <div
+                  ref={editRef}
+                  className={`transition-opacity duration-300`}
+                >
+                  <div className="flex flex-col gap-2">
+                    <input
+                      className="outline-none border border-blue-900  bg-gray-700 px-2 py-1 rounded-xl  text-white"
+                      type="text"
+                      value={editDraft}
+                      onChange={handleEditInput}
+                      onKeyDown={handleKeyDown}
+                      autoFocus={editPost}
+                    />
+                    <div className="flex items-center justify-center gap-2 mb-2">
+                      <button
+                        className="text-white border px-2 rounded-xl hover:bg-gray-600"
+                        onClick={handleUpdate}
+                      >
+                        Update
+                      </button>
+                      <button
+                        className="text-white border px-2 rounded-xl hover:bg-gray-600"
+                        onClick={handleCancel}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                {/* View mode */}
+                <div
+                  ref={contentRef}
+                  className={`transition-opacity duration-300 `}
+                >
+                  <div className="text-amber-50 whitespace-pre-wrap break-words">
+                    {post.content}
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* Post actions */}
+          <div className="flex items-center gap-4">
+            <button className="flex items-center gap-1 text-amber-50/70 hover:text-pink-400 transition-colors">
+              <Heart size={18} />
+              <span className="text-xs">{post.likes || 0}</span>
+            </button>
+            <button className="flex items-center gap-1 text-amber-50/70 hover:text-cyan-400 transition-colors">
+              <MessageCircle size={18} />
+              <span className="text-xs">{post.comments?.length || 0}</span>
+            </button>
+            <button className="flex items-center gap-1 text-amber-50/70 hover:text-amber-400 transition-colors">
+              <Share size={18} />
+            </button>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default PostCard;

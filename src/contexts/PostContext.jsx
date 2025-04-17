@@ -58,9 +58,13 @@ export function PostProvider({ children }) {
 
   const updatePost = async (id, content) => {
     try {
-      const res = await axios.put(`${API_URL}/posts/${id}`, content, {
-        withCredentials: true,
-      });
+      const res = await axios.put(
+        `${API_URL}/posts/${id}`,
+        { content: content },
+        {
+          withCredentials: true,
+        }
+      );
       setPosts(posts.map((post) => (post.id === id ? res.data.post : post)));
       return res.data.post;
     } catch (error) {
@@ -71,7 +75,7 @@ export function PostProvider({ children }) {
 
   const deletePost = async (id) => {
     try {
-      const res = await axios.put(`${API_URL}/posts/${id}`, content, {
+      const res = await axios.delete(`${API_URL}/posts/${id}`, {
         withCredentials: true,
       });
       setPosts(posts.filter((post) => post.id !== id));

@@ -4,8 +4,8 @@ import { useState } from "react";
 import ThemeToggle from "../reusable/ThemeToggle";
 import { Home, LogIn, UserPlus, LogOut, Ghost } from "lucide-react";
 import IconTooltip from "../reusable/IconToolTip";
-import ProfileTooltip from "../reusable/ProfileToolTip";
 import { useScroll } from "../../contexts/ScrollContext";
+import ProfileTooltip from "../reusable/ProfileTooltip";
 
 const Sidebar = ({ mainRef }) => {
   const { currentUser, logout, guestLogin } = useAuth();
@@ -45,17 +45,16 @@ const Sidebar = ({ mainRef }) => {
 
           {currentUser ? (
             <>
-              <ProfileTooltip user={currentUser}>
-                <div className="p-2 rounded-lg hover:bg-gray-700">
-                  <div className="w-6 h-6 overflow-hidden border rounded-full">
-                    <img
-                      className="w-full h-full object-cover"
-                      src={currentUser.avatar}
-                      alt={`${currentUser.username}'s avatar`}
-                    />
-                  </div>
+              <div className="p-2 rounded-lg hover:bg-gray-700 group relative">
+                <div className="w-6 h-6 overflow-hidden border rounded-full">
+                  <img
+                    className="w-full h-full object-cover"
+                    src={currentUser.avatar}
+                    alt={`${currentUser.username}'s avatar`}
+                  />
+                  <ProfileTooltip user={currentUser} />
                 </div>
-              </ProfileTooltip>
+              </div>
 
               <IconTooltip label="Logout">
                 <button

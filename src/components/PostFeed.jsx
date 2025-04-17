@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import timeAgo from "../utils/timeAgo";
 import PostSkeletonLoader from "./reusable/PostSkeleton";
-import ScrollToTopButton from "./reusable/ScrollToTopButton";
+import PostCard from "./PostCard";
 
 const PostFeed = () => {
   const { fetchPosts, posts } = usePosts();
@@ -78,54 +78,7 @@ const PostFeed = () => {
                 ref={index === posts.length - 1 ? lastPostElementRef : null}
                 className="p-4 hover:bg-cyan-800/20 transition-colors"
               >
-                <div className="flex items-start gap-3">
-                  {/* Avatar placeholder */}
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-300 to-blue-500 flex items-center justify-center text-cyan-900 font-bold">
-                    {post.user && <img src={post.user.avatar} alt="Avatar" />}
-                  </div>
-
-                  <div className="flex-1">
-                    {/* Post header */}
-                    <div className="flex items-center justify-between mb-1 ">
-                      <div className="flex items-center gap-2">
-                        <span className="font-semibold text-amber-50">
-                          {post.author ? post.author.username : "Unknown User"}
-                        </span>
-                        <span className="text-amber-50/50 text-sm flex items-center gap-1">
-                          <Clock size={14} />
-                          {post.createdAt
-                            ? timeAgo(post.createdAt)
-                            : "Just now"}
-                        </span>
-                      </div>
-                      <button className="text-amber-50/70 hover:text-amber-50 p-1 rounded-full hover:bg-cyan-700/30">
-                        <MoreHorizontal size={16} />
-                      </button>
-                    </div>
-
-                    {/* Post content */}
-                    <div className="text-amber-50 mb-3 whitespace-pre-wrap break-words">
-                      {post.content}
-                    </div>
-
-                    {/* Post actions */}
-                    <div className="flex items-center gap-4">
-                      <button className="flex items-center gap-1 text-amber-50/70 hover:text-pink-400 transition-colors">
-                        <Heart size={18} />
-                        <span className="text-xs">{post.likes || 0}</span>
-                      </button>
-                      <button className="flex items-center gap-1 text-amber-50/70 hover:text-cyan-400 transition-colors">
-                        <MessageCircle size={18} />
-                        <span className="text-xs">
-                          {post.comments?.length || 0}
-                        </span>
-                      </button>
-                      <button className="flex items-center gap-1 text-amber-50/70 hover:text-amber-400 transition-colors">
-                        <Share size={18} />
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                <PostCard post={post} />
               </article>
             ))}
             {loadingMore && <PostSkeletonLoader count={2} />}

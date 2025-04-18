@@ -5,6 +5,7 @@ import { AuthProvider } from "./contexts/AuthContext.jsx";
 import { ThemeProvider } from "./contexts/ThemeContext.jsx";
 import { PostProvider } from "./contexts/PostContext.jsx";
 import { ScrollProvider } from "./contexts/ScrollContext.jsx";
+import { ToastProvider } from "./contexts/NotificationContext.jsx";
 
 import "./index.css";
 import App from "./App.jsx";
@@ -16,7 +17,9 @@ createRoot(document.getElementById("root")).render(
         <PostProvider>
           <AuthProvider>
             <ScrollProvider>
-              <App />
+              <ToastProvider>
+                <App />
+              </ToastProvider>
             </ScrollProvider>
           </AuthProvider>
         </PostProvider>

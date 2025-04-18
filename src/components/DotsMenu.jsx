@@ -2,12 +2,13 @@ import { Pencil, XOctagon, Flag, MoreHorizontal } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { usePosts } from "../contexts/PostContext";
+import { useToast } from "../contexts/NotificationContext";
 
 const DotsMenu = ({ onEdit, onDelete, post }) => {
   const [isVisible, setIsVisible] = useState(false);
   const menuRef = useRef(null);
   const { currentUser } = useAuth();
-  const { toastNotification } = usePosts();
+  const { success, error, info } = useToast();
 
   const toggleMenu = () => {
     setIsVisible(!isVisible);
@@ -71,7 +72,7 @@ const DotsMenu = ({ onEdit, onDelete, post }) => {
           ) : (
             <button
               className="flex items-center w-full p-1 text-sm text-amber-50/90 hover:bg-cyan-700/30 hover:text-lime-500 transition-colors duration-150"
-              onClick={toastNotification}
+              onClick={() => info("Post reported")}
             >
               <Flag size={16} className="mr-2" />
               Report

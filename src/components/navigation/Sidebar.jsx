@@ -7,7 +7,7 @@ import IconTooltip from "../reusable/IconToolTip";
 import { useScroll } from "../../contexts/ScrollContext";
 import ProfileTooltip from "../reusable/ProfileTooltip";
 
-const Sidebar = ({ mainRef }) => {
+const Sidebar = () => {
   const { currentUser, logout, guestLogin } = useAuth();
   const { scrollToTop } = useScroll();
 
@@ -27,7 +27,7 @@ const Sidebar = ({ mainRef }) => {
             to="/"
             className="flex items-center p-2 rounded-lg hover:scale-200 hover:rotate-180 transition-all duration-300"
           >
-            <img src="./eye.png" alt="Logo" />
+            <img src="/eye.png" alt="Logo" />
           </Link>
         </div>
 

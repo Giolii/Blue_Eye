@@ -5,14 +5,15 @@ import { useEffect, useRef, useState } from "react";
 import { usePosts } from "../contexts/PostContext";
 import ProfileTooltip from "./reusable/ProfileTooltip";
 import { useAuth } from "../contexts/AuthContext";
+import { Link } from "react-router-dom";
 
-const PostCard = ({ post }) => {
+const PostCard = ({ post, setPostsPage }) => {
   const [editPost, setEditPost] = useState(false);
   const [editDraft, setEditDraft] = useState(post.content);
   const [contentHeight, setContentHeight] = useState("auto");
   const contentRef = useRef(null);
   const editRef = useRef(null);
-  const { updatePost } = usePosts();
+  const { updatePost, deletePost } = usePosts();
   const { currentUser } = useAuth();
 
   useEffect(() => {
@@ -35,7 +36,7 @@ const PostCard = ({ post }) => {
     try {
       if (editDraft === post.content) return;
       if (!editDraft.trim()) return handleCancel();
-      const response = await updatePost(post.id, editDraft);
+      const response = await updatePost(post.id, editDraft, setPostsPage);
       setEditPost(false);
     } catch (error) {
       console.error(error.message);
@@ -45,10 +46,6 @@ const PostCard = ({ post }) => {
   const handleCancel = () => {
     setEditDraft(post.content);
     setEditPost(false);
-  };
-
-  const handleEditInput = (e) => {
-    setEditDraft(e.target.value);
   };
 
   const handleKeyDown = (e) => {
@@ -61,9 +58,13 @@ const PostCard = ({ post }) => {
     }
   };
 
+  const handleDeletePost = async () => {
+    await deletePost(post.id, setPostsPage);
+  };
+
   return (
     <>
-      <div className="flex items-start gap-3">
+      <div className="flex items-start gap-3 relative border border-gray-400 p-2 rounded-xl">
         {/* Avatar placeholder */}
         <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-300 to-blue-500 flex items-center justify-center text-cyan-900 font-bold group relative">
           {post.user && <img src={post.user.avatar} alt="Avatar" />}
@@ -74,16 +75,26 @@ const PostCard = ({ post }) => {
         <div className="flex-1">
           {/* Post header */}
           <div className="flex items-center justify-between mb-1 ">
-            <div className="flex items-center gap-2">
-              <span className="font-semibold text-amber-50">
+            <div className="flex flex-col items-center ">
+              <Link
+                className="font-semibold text-amber-50"
+                to={`/users/${post.userId}`}
+              >
                 {post.user ? post.user.username : "Unknown User"}
-              </span>
+              </Link>
               <span className="text-amber-50/50 text-xs flex items-center gap-1">
-                <Clock size={12} />
-                {post.createdAt ? timeAgo(post.createdAt) : "Just now"}
+                @{post.user && post.user.username}
               </span>
             </div>
-            <DotsMenu setEditPost={setEditPost} post={post} />
+            <DotsMenu
+              onEdit={() => setEditPost(true)}
+              onDelete={handleDeletePost}
+              post={post}
+            />
+            <span className="text-amber-50/50 text-xs flex items-center gap-1 absolute bottom-0 right-0 p-2">
+              <Clock size={12} />
+              {post.createdAt ? timeAgo(post.createdAt) : "Just now"}
+            </span>
           </div>
 
           {/* Post content */}
@@ -103,7 +114,7 @@ const PostCard = ({ post }) => {
                       className="outline-none border border-blue-900  bg-gray-700 px-2 py-1 rounded-xl  text-white"
                       type="text"
                       value={editDraft}
-                      onChange={handleEditInput}
+                      onChange={(e) => setEditDraft(e.target.value)}
                       onKeyDown={handleKeyDown}
                       autoFocus={editPost}
                     />

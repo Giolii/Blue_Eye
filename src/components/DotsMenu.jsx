@@ -3,11 +3,11 @@ import { useState, useRef, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { usePosts } from "../contexts/PostContext";
 
-const DotsMenu = ({ setEditPost, post }) => {
+const DotsMenu = ({ onEdit, onDelete, post }) => {
   const [isVisible, setIsVisible] = useState(false);
   const menuRef = useRef(null);
   const { currentUser } = useAuth();
-  const { deletePost } = usePosts();
+  const { toastNotification } = usePosts();
 
   const toggleMenu = () => {
     setIsVisible(!isVisible);
@@ -29,21 +29,15 @@ const DotsMenu = ({ setEditPost, post }) => {
     };
   }, [isVisible]);
 
-  const handleClickEdit = () => {
-    setEditPost(true);
-    setIsVisible(false);
-  };
-
-  const handleDeletePost = async () => {
-    await deletePost(post.id);
-    setIsVisible(false);
-  };
-
   return (
     <>
-      <div className="relative " ref={menuRef}>
+      <div
+        className="relative "
+        ref={menuRef}
+        onClick={() => setIsVisible(!isVisible)}
+      >
         <button
-          className="text-amber-50/70 hover:text-amber-50 p-1 rounded-full hover:bg-cyan-700/30 transition-colors duration-200 "
+          className="text-amber-50/70 hover:text-amber-50 p-1 rounded-full hover:bg-cyan-700/30 transition-colors duration-100 "
           onClick={toggleMenu}
           aria-label="Menu Options"
         >
@@ -51,7 +45,7 @@ const DotsMenu = ({ setEditPost, post }) => {
         </button>
 
         <div
-          className={`absolute right-0 top-6 bg-slate-800 rounded-md shadow-lg   transition-all duration-200 ease-in-out ${
+          className={`absolute right-0 top-6 bg-slate-800 rounded-md shadow-lg   transition-all duration-100 ease-in-out ${
             isVisible
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-1 pointer-events-none"
@@ -61,14 +55,14 @@ const DotsMenu = ({ setEditPost, post }) => {
             <>
               <button
                 className="flex items-center w-full p-1 text-sm text-amber-50/90 hover:bg-cyan-700/30 hover:text-amber-300 transition-colors duration-150"
-                onClick={() => handleClickEdit()}
+                onClick={onEdit}
               >
                 <Pencil className="mr-2" size={16} />
                 Edit
               </button>
               <button
                 className="flex items-center w-full p-1 text-sm text-amber-50/90 hover:bg-cyan-700/30 hover:text-red-400 transition-colors duration-150"
-                onClick={handleDeletePost}
+                onClick={onDelete}
               >
                 <XOctagon className="mr-2" size={16} />
                 Delete
@@ -77,8 +71,7 @@ const DotsMenu = ({ setEditPost, post }) => {
           ) : (
             <button
               className="flex items-center w-full p-1 text-sm text-amber-50/90 hover:bg-cyan-700/30 hover:text-lime-500 transition-colors duration-150"
-              // To implement
-              onClick={() => setIsVisible(false)}
+              onClick={toastNotification}
             >
               <Flag size={16} className="mr-2" />
               Report

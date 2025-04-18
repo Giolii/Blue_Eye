@@ -15,6 +15,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 export function PostProvider({ children }) {
   const [posts, setPosts] = useState([]);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -56,7 +57,7 @@ export function PostProvider({ children }) {
     }
   };
 
-  const updatePost = async (id, content) => {
+  const updatePost = async (id, content, setPostsPage = setPosts) => {
     try {
       const res = await axios.put(
         `${API_URL}/posts/${id}`,
@@ -65,7 +66,9 @@ export function PostProvider({ children }) {
           withCredentials: true,
         }
       );
-      setPosts(posts.map((post) => (post.id === id ? res.data.post : post)));
+      setPostsPage((prevPosts) =>
+        prevPosts.map((post) => (post.id === id ? res.data.post : post))
+      );
       return res.data.post;
     } catch (error) {
       setError(error.message);
@@ -73,12 +76,12 @@ export function PostProvider({ children }) {
     }
   };
 
-  const deletePost = async (id) => {
+  const deletePost = async (id, setPostsPage = setPosts) => {
     try {
       const res = await axios.delete(`${API_URL}/posts/${id}`, {
         withCredentials: true,
       });
-      setPosts(posts.filter((post) => post.id !== id));
+      setPostsPage((prevPosts) => prevPosts.filter((post) => post.id !== id));
     } catch (error) {
       setError(error.message);
       throw error;
@@ -94,16 +97,34 @@ export function PostProvider({ children }) {
         withCredentials: true,
       });
       return res.data.post;
-    } catch (error) {}
+    } catch (error) {
+      setError(error.message);
+      throw error;
+    }
   };
 
   const fetchUserPost = async (id) => {
     try {
-      const res = await axios.get(`${API_URL}/posts/${id}`, content, {
+      const res = await axios.get(`${API_URL}/posts/users/${id}`, {
         withCredentials: true,
       });
-      return res.data.post;
-    } catch (error) {}
+      return res.data;
+    } catch (error) {
+      setError(error.message);
+      throw error;
+    }
+  };
+
+  const fetchUserById = async (id) => {
+    try {
+      const res = await axios.get(`${API_URL}/users/${id}`, {
+        withCredentials: true,
+      });
+      return res.data;
+    } catch (error) {
+      setError(error.message);
+      throw error;
+    }
   };
 
   useEffect(() => {
@@ -117,6 +138,8 @@ export function PostProvider({ children }) {
         loading,
         error,
         fetchPosts,
+        fetchUserPost,
+        fetchUserById,
         createPost,
         updatePost,
         deletePost,

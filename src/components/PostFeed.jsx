@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { usePosts } from "../contexts/PostContext";
 import PostSkeletonLoader from "./reusable/PostSkeleton";
 import PostCard from "./PostCard";
+import { motion, AnimatePresence } from "motion/react";
 
 const PostFeed = () => {
   const { fetchPosts, posts } = usePosts();
@@ -67,19 +68,33 @@ const PostFeed = () => {
           REPORTED
         </div>
       )}
-      <div className="border border-amber-50/20 grow rounded-2xl mt-2  bg-cyan-900/30 backdrop-blur-sm ">
+      <div className="flex flex-col gap-4">
         {posts && posts.length > 0 ? (
           <div className="h-full flex flex-col divide-y divide-amber-50/10">
-            {posts.map((post, index) => (
-              <article
-                key={post.id}
-                ref={index === posts.length - 1 ? lastPostElementRef : null}
-                className="p-4 hover:bg-cyan-800/20 transition-colors"
-              >
-                <PostCard post={post} />
-              </article>
-            ))}
-            {loadingMore && <PostSkeletonLoader count={2} />}
+            <AnimatePresence mode="popLayout">
+              {posts.map((post, index) => (
+                <motion.div
+                  key={post.id}
+                  initial={{ opacity: 0, y: -50 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -50 }}
+                  transition={{
+                    duration: 0.3,
+                    layout: { type: "spring", stiffness: 200, damping: 20 },
+                  }}
+                  layout
+                >
+                  <article
+                    key={post.id}
+                    ref={index === posts.length - 1 ? lastPostElementRef : null}
+                    className="p-4 hover:bg-cyan-800/20 transition-colors"
+                  >
+                    <PostCard post={post} />
+                  </article>
+                </motion.div>
+              ))}
+              {loadingMore && <PostSkeletonLoader count={2} />}
+            </AnimatePresence>
           </div>
         ) : (
           <div className="h-full flex items-center justify-center text-amber-50/70 p-6 text-center">

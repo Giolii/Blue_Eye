@@ -1,7 +1,6 @@
 import { Pencil, XOctagon, Flag, MoreHorizontal } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
-import { usePosts } from "../contexts/PostContext";
 import { useToast } from "../contexts/NotificationContext";
 
 const DotsMenu = ({ onEdit, onDelete, post }) => {
@@ -10,17 +9,12 @@ const DotsMenu = ({ onEdit, onDelete, post }) => {
   const { currentUser } = useAuth();
   const { success, error, info } = useToast();
 
-  const toggleMenu = () => {
-    setIsVisible(!isVisible);
-  };
-
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setIsVisible(false);
       }
     };
-
     if (isVisible) {
       document.addEventListener("mousedown", handleClickOutside);
     }
@@ -30,13 +24,26 @@ const DotsMenu = ({ onEdit, onDelete, post }) => {
     };
   }, [isVisible]);
 
+  const toggleMenu = () => {
+    setIsVisible(!isVisible);
+  };
+
+  const handleEdit = () => {
+    setIsVisible(!isVisible);
+    onEdit();
+  };
+  const handleDelete = () => {
+    setIsVisible(!isVisible);
+    onDelete();
+  };
+  const handleReport = () => {
+    setIsVisible(!isVisible);
+    () => info("Post reported");
+  };
+
   return (
     <>
-      <div
-        className="relative "
-        ref={menuRef}
-        onClick={() => setIsVisible(!isVisible)}
-      >
+      <div className="relative z-10" ref={menuRef}>
         <button
           className="text-amber-50/70 hover:text-amber-50 p-1 rounded-full hover:bg-cyan-700/30 transition-colors duration-100 "
           onClick={toggleMenu}
@@ -56,14 +63,14 @@ const DotsMenu = ({ onEdit, onDelete, post }) => {
             <>
               <button
                 className="flex items-center w-full p-1 text-sm text-amber-50/90 hover:bg-cyan-700/30 hover:text-amber-300 transition-colors duration-150"
-                onClick={onEdit}
+                onClick={handleEdit}
               >
                 <Pencil className="mr-2" size={16} />
                 Edit
               </button>
               <button
                 className="flex items-center w-full p-1 text-sm text-amber-50/90 hover:bg-cyan-700/30 hover:text-red-400 transition-colors duration-150"
-                onClick={onDelete}
+                onClick={handleDelete}
               >
                 <XOctagon className="mr-2" size={16} />
                 Delete
@@ -72,7 +79,7 @@ const DotsMenu = ({ onEdit, onDelete, post }) => {
           ) : (
             <button
               className="flex items-center w-full p-1 text-sm text-amber-50/90 hover:bg-cyan-700/30 hover:text-lime-500 transition-colors duration-150"
-              onClick={() => info("Post reported")}
+              onClick={handleReport}
             >
               <Flag size={16} className="mr-2" />
               Report

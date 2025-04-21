@@ -1,22 +1,34 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { usePosts } from "../contexts/PostContext";
-import { Send, Image, ImagePlay, X } from "lucide-react";
+import { Send, Image, ImagePlay, X, Loader } from "lucide-react";
+import uploadImage from "../utils/uploadImage";
 
 const PostComposer = () => {
   const [postDraft, setPostDraft] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
+
+  const [isUploadingPic, setIsUploadingPic] = useState(false);
+  const [imageToSend, setImageToSend] = useState(null);
+  const [imageToSendPreview, setImageToSendPreview] = useState(null);
+
   const { createPost } = usePosts();
+  const fileInputRef = useRef(null);
+  const inputRef = useRef(null);
+
   const charLimit = 280;
 
   const handleSubmitPost = async () => {
     if (postDraft.trim() === "" || postDraft.length > charLimit) return;
 
     try {
-      await createPost(postDraft);
+      await createPost(postDraft, imageToSend);
       setPostDraft("");
       setIsExpanded(false);
     } catch (error) {
       console.error(error);
+    } finally {
+      setImageToSend(false);
+      setImageToSendPreview(false);
     }
   };
 
@@ -24,6 +36,25 @@ const PostComposer = () => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSubmitPost();
+    }
+  };
+
+  const handleUploadImg = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      try {
+        setIsUploadingPic(true);
+        const objUrl = URL.createObjectURL(file);
+        setImageToSendPreview(objUrl);
+        const imageUrl = await uploadImage(file);
+        setImageToSend(imageUrl);
+        // Focus on text input after uploading
+        inputRef.current?.focus();
+      } catch (error) {
+        console.error("Error uploading image:", error.message);
+      } finally {
+        setIsUploadingPic(false);
+      }
     }
   };
 
@@ -53,6 +84,7 @@ const PostComposer = () => {
               isExpanded ? "h-24" : "h-12"
             }`}
             rows={isExpanded ? 3 : 1}
+            ref={inputRef}
           />
 
           {/* Character counter */}
@@ -65,14 +97,45 @@ const PostComposer = () => {
           </div>
         </div>
 
+        {/* Picture Preview */}
+        {imageToSendPreview && (
+          <div className="max-w-[200px] w-full mx-auto border p-1 border-gray-400 rounded-xl relative flex justify-center">
+            <button
+              className="absolute top-0 right-0  hover:opacity-80 "
+              onClick={() => {
+                setImageToSendPreview(null);
+                setImageToSend(null);
+              }}
+            >
+              <X className="text-red-600 " />
+            </button>
+            <img src={imageToSendPreview} />
+          </div>
+        )}
+
         {/* Action buttons */}
         <div className={`flex items-center justify-between`}>
           <div className="flex items-center gap-2">
             <button
-              className="p-2 rounded-full text-amber-50 hover:bg-cyan-700/50 transition-colors"
-              title="Add image"
+              onClick={() => fileInputRef.current.click()}
+              disabled={isUploadingPic}
+              className="p-1 sm:p-3 text-zinc-600 dark:text-zinc-400 hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors duration-200 relative rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-indigo-600"
+              aria-label="Upload image"
+              title="Upload image"
             >
-              <Image size={18} />
+              {isUploadingPic ? (
+                <Loader className="animate-spin h-5 w-5 text-indigo-500 dark:text-indigo-400" />
+              ) : (
+                <Image className="h-5 w-5" />
+              )}
+              <input
+                autoComplete="off"
+                type="file"
+                className="hidden"
+                accept="image/*"
+                onChange={handleUploadImg}
+                ref={fileInputRef}
+              />
             </button>
             <button
               className="p-2 rounded-full text-amber-50 hover:bg-cyan-700/50 transition-colors"

@@ -40,16 +40,17 @@ export function PostProvider({ children }) {
     }
   };
 
-  const createPost = async (content) => {
+  const createPost = async (content, imageUrl) => {
     try {
       const res = await axios.post(
         `${API_URL}/posts`,
-        { content },
+        { content, imageUrl },
         {
           withCredentials: true,
         }
       );
       setPosts([res.data.post, ...posts]);
+      console.log(res.data.post);
       return res.data.post;
     } catch (error) {
       setError(error.message);

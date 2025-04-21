@@ -12,27 +12,10 @@ const PostCard = ({ post, setPostsPage }) => {
   const [editPost, setEditPost] = useState(false);
   const [editDraft, setEditDraft] = useState(post.content);
   const [contentHeight, setContentHeight] = useState("auto");
-  const contentRef = useRef(null);
   const editRef = useRef(null);
   const { updatePost, deletePost } = usePosts();
   const { currentUser } = useAuth();
   const [isDeleting, setIsDeleting] = useState(false);
-
-  useEffect(() => {
-    if (editPost) {
-      // Get the height of the edit container
-      const editHeight = editRef.current
-        ? editRef.current.scrollHeight
-        : "auto";
-      setContentHeight(`${editHeight}px`);
-    } else {
-      // Get the height of the content container
-      const viewHeight = contentRef.current
-        ? contentRef.current.scrollHeight
-        : "auto";
-      setContentHeight(`${viewHeight}px`);
-    }
-  }, [editPost]);
 
   const handleUpdate = async () => {
     try {
@@ -137,10 +120,15 @@ const PostCard = ({ post, setPostsPage }) => {
           ) : (
             <>
               {/* View mode */}
-              <div ref={contentRef} className="transition-opacity duration-300">
-                <div className="text-amber-50 whitespace-pre-wrap break-words">
+              <div className="transition-opacity duration-300">
+                <div className="text-amber-50 whitespace-pre-wrap break-words p-2">
                   {post.content}
                 </div>
+                {post.imageUrl && (
+                  <div className="bg-gray-50 flex justify-center p-2 border border-gray-400 rounded-xl">
+                    <img src={post.imageUrl} alt="Picture" />
+                  </div>
+                )}
               </div>
             </>
           )}

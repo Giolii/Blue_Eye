@@ -13,23 +13,24 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    const verifyAuth = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/auth/me`, {
-          withCredentials: true,
-        });
-        setCurrentUser(response.data.user);
-      } catch (error) {
-        if (error.status !== 401) {
-          console.error("User verification failed:", error);
-        }
-        setCurrentUser(null);
-      } finally {
-        setLoading(false);
+  const verifyUser = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/auth/me`, {
+        withCredentials: true,
+      });
+      setCurrentUser(response.data.user);
+    } catch (error) {
+      if (error.status !== 401) {
+        console.error("User verification failed:", error);
       }
-    };
-    verifyAuth();
+      setCurrentUser(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    verifyUser();
   }, []);
 
   const login = async (emailOrUsername, password) => {
@@ -122,6 +123,7 @@ export function AuthProvider({ children }) {
     guestLogin,
     register,
     logout,
+    verifyUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

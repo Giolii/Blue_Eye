@@ -50,7 +50,6 @@ export function PostProvider({ children }) {
         }
       );
       setPosts([res.data.post, ...posts]);
-      console.log(res.data.post);
       return res.data.post;
     } catch (error) {
       setError(error.message);

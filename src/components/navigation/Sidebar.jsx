@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { useState } from "react";
 import ThemeToggle from "../reusable/ThemeToggle";
@@ -10,6 +10,7 @@ import ProfileTooltip from "../reusable/ProfileTooltip";
 const Sidebar = () => {
   const { currentUser, logout, guestLogin } = useAuth();
   const { scrollToTop } = useScroll();
+  const navigate = useNavigate();
 
   const handleHomeClick = () => {
     scrollToTop();
@@ -46,7 +47,10 @@ const Sidebar = () => {
           {currentUser ? (
             <>
               <div className="p-2 rounded-lg hover:bg-gray-700 group relative">
-                <div className="w-6 h-6 overflow-hidden border rounded-full">
+                <div
+                  className="w-6 h-6 overflow-hidden border rounded-full  bg-gradient-to-br from-blue-300 to-blue-500"
+                  onClick={() => navigate(`users/${currentUser.id}`)}
+                >
                   <img
                     className="w-full h-full object-cover"
                     src={currentUser.avatar}

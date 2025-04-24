@@ -38,7 +38,7 @@ const DotsMenu = ({ onEdit, onDelete, post }) => {
   };
   const handleReport = () => {
     setIsVisible(!isVisible);
-    () => info("Post reported");
+    info("Post reported");
   };
 
   return (

@@ -48,6 +48,7 @@ const UserProfile = () => {
           </div>
         </div>
       )}
+
       {posts && (
         <div>
           {posts.map((post) => (

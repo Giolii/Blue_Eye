@@ -27,6 +27,7 @@ export function PostProvider({ children }) {
         withCredentials: true,
       });
       const data = res.data;
+
       if (page === 1) {
         setPosts(data.posts);
       } else {
@@ -127,6 +128,10 @@ export function PostProvider({ children }) {
     }
   };
 
+  const addPost = async (post) => {
+    setPosts((prev) => [post, ...prev]);
+  };
+
   useEffect(() => {
     fetchPosts();
   }, []);
@@ -143,6 +148,7 @@ export function PostProvider({ children }) {
         createPost,
         updatePost,
         deletePost,
+        addPost,
       }}
     >
       {children}

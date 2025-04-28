@@ -1,9 +1,9 @@
 import {
   createContext,
-  useCallback,
   useContext,
   useEffect,
   useState,
+  useCallback,
 } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import io from "socket.io-client";
@@ -15,10 +15,9 @@ export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
-  const [isConnected, setIsConnected] = useState(false);
   const { currentUser } = useAuth();
 
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
   // Memoize loadNotifications to prevent unnecessary re-renders
   const loadNotifications = useCallback(async () => {
@@ -36,82 +35,51 @@ export const SocketProvider = ({ children }) => {
     }
   }, [API_URL, currentUser]);
 
-  // Socket connection management
+  // Initialize and manage socket connection
   useEffect(() => {
-    let socketInstance = null;
+    const socketInstance = io(API_URL, { withCredentials: true });
 
-    if (currentUser) {
-      // Only connect when user is authenticated
-      socketInstance = io(API_URL, { withCredentials: true });
+    // Authentication events from your backend
+    socketInstance.on("authenticated", (data) => {
+      console.log("User authenticated:", data);
+      loadNotifications();
+    });
 
-      // Connection events
-      socketInstance.on("connect", () => {
-        console.log("Socket connected");
-        setIsConnected(true);
-      });
+    // Notification event (this should be emitted from somewhere in your backend)
+    socketInstance.on("notification", (data) => {
+      console.log("Received notification:", data);
 
-      socketInstance.on("disconnect", () => {
-        console.log("Socket disconnected");
-        setIsConnected(false);
-      });
+      const notificationWithId = {
+        ...data,
+        id: data.id || Date.now(),
+        read: false,
+      };
 
-      socketInstance.on("connect_error", (err) => {
-        console.error("Connection error:", err);
-        setIsConnected(false);
-      });
+      setNotifications((prev) => [notificationWithId, ...prev]);
+      setUnreadCount((prev) => prev + 1);
+    });
 
-      // Authentication events
-      socketInstance.on("authenticated", (data) => {
-        console.log("User authenticated:", data);
-        loadNotifications();
-      });
-      // Notification events
-      socketInstance.on("notification", (data) => {
-        console.log("Received notification:", data);
+    setSocket(socketInstance);
 
-        const notificationWithId = {
-          ...data,
-          id: data.id || Date.now(),
-          read: false,
-        };
-
-        setNotifications((prev) => [notificationWithId, ...prev]);
-        setUnreadCount((prev) => prev + 1);
-      });
-
-      setSocket(socketInstance);
-    }
     return () => {
       if (socketInstance) {
         socketInstance.disconnect();
         setSocket(null);
-        setIsConnected(false);
       }
     };
-  }, [currentUser, API_URL, loadNotifications]);
+  }, [API_URL, loadNotifications]);
 
-  useEffect(() => {
-    if (currentUser) {
-      loadNotifications();
-    } else {
-      // Clear notifications when user logs out
-      setNotifications([]);
-      setUnreadCount(0);
-    }
-  }, [currentUser, loadNotifications]);
-
-  const markAsRead = async (notificationId) => {
+  // Notification management functions
+  const markAllAsRead = async () => {
+    const unreadCount = notifications.filter((notif) => !notif.read).length;
     // Optimistic update
-    setNotifications((prev) =>
-      prev.map((notif) =>
-        notif.id === notificationId ? { ...notif, read: true } : notif
-      )
-    );
-    setUnreadCount((prev) => Math.max(0, prev - 1));
+    setNotifications((prev) => prev.map((notif) => ({ ...notif, read: true })));
+
+    setUnreadCount(0);
 
     try {
       await axios.put(
-        `${API_URL}/notifications/${notificationId}/read`,
+        `${API_URL}/notifications/readAll`,
         {},
         { withCredentials: true }
       );
@@ -138,18 +106,29 @@ export const SocketProvider = ({ children }) => {
     }
   };
 
-  const value = {
-    socket,
-    isConnected,
-    notifications,
-    unreadCount,
-    loadNotifications,
-    markAsRead,
-    clearAll,
-  };
+  // Auto-load notifications when user changes
+  useEffect(() => {
+    if (currentUser) {
+      loadNotifications();
+    } else {
+      setNotifications([]);
+      setUnreadCount(0);
+    }
+  }, [currentUser, loadNotifications]);
 
   return (
-    <SocketContext.Provider value={value}>{children}</SocketContext.Provider>
+    <SocketContext.Provider
+      value={{
+        socket,
+        notifications,
+        unreadCount,
+        loadNotifications,
+        markAllAsRead,
+        clearAll,
+      }}
+    >
+      {children}
+    </SocketContext.Provider>
   );
 };
 

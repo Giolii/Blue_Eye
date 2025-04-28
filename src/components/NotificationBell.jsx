@@ -1,40 +1,46 @@
 // src/components/NotificationBell.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSocket } from "../contexts/SocketContext";
+import { Bell } from "lucide-react";
+import TimeAgo from "../utils/TimeAgoComponent";
 
 const NotificationBell = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const {
-    notifications,
-    unreadCount,
-    markAsRead,
-    clearAll,
-    loadNotifications,
-  } = useSocket();
+  const { notifications, unreadCount, markAllAsRead, clearAll } = useSocket();
+  const notificationRef = useRef(null);
 
-  // useEffect(() => {
-  //   loadNotifications();
-  // }, []);
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        notificationRef.current &&
+        !notificationRef.current.contains(event.target)
+      ) {
+        setIsOpen(false);
+        markAllAsRead();
+      }
+    }
+
+    // Add event listener when the panel is open
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    // Cleanup the event listener
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
+
+  const handleOpenBell = () => {
+    setIsOpen(!isOpen);
+
+    markAllAsRead();
+  };
 
   return (
-    <div className="relative">
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 text-gray-600 hover:text-gray-800"
-      >
-        <svg
-          className="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-          />
-        </svg>
+    <div className="relative" ref={notificationRef}>
+      <button onClick={handleOpenBell} className="relative p-2 text-text">
+        <Bell />
         {unreadCount > 0 && (
           <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
             {unreadCount}
@@ -46,7 +52,9 @@ const NotificationBell = () => {
         <div className="absolute left-0 mt-2 w-80 bg-white rounded-lg shadow-lg z-50 border border-gray-200">
           <div className="p-4">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold">Notifications</h3>
+              <h3 className="text-lg font-semibold text-black">
+                Notifications
+              </h3>
               {notifications.length > 0 && (
                 <button
                   onClick={clearAll}
@@ -69,13 +77,12 @@ const NotificationBell = () => {
                     className={`p-3 rounded-lg cursor-pointer ${
                       notification.read ? "bg-gray-50" : "bg-blue-50"
                     }`}
-                    onClick={() => markAsRead(notification.id)}
                   >
                     <p className="text-sm font-medium text-gray-800">
                       {notification.message}
                     </p>
                     <p className="text-xs text-gray-500 mt-1">
-                      {new Date(notification.createdAt).toLocaleTimeString()}
+                      <TimeAgo dateString={notification.createdAt} />
                     </p>
                   </div>
                 ))

@@ -1,4 +1,4 @@
-import { Heart, MessageCircle, Share, Clock } from "lucide-react";
+import { Heart, MessageCircle, Share, Clock, Timer } from "lucide-react";
 import timeAgo from "../utils/timeAgo";
 import DotsMenu from "./DotsMenu";
 import { useRef, useState } from "react";
@@ -8,6 +8,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { Link } from "react-router-dom";
 import PostActions from "./PostActions";
 import SharedPost from "./SharedPost";
+import TimeAgo from "../utils/TimeAgoComponent";
 
 const PostCard = ({ post, setPostsPage }) => {
   const [editPost, setEditPost] = useState(false);
@@ -80,8 +81,9 @@ const PostCard = ({ post, setPostsPage }) => {
             post={post}
           />
           <span className="text-amber-50/50 text-xs flex items-center gap-1 absolute bottom-0 right-0 p-2">
-            <Clock size={12} />
-            {post.createdAt ? timeAgo(post.createdAt) : "Just now"}
+            <Timer size={12} />
+            {/* {post.createdAt ? timeAgo(post.createdAt) : "Just now"} */}
+            <TimeAgo dateString={post.createdAt} />
           </span>
         </div>
 

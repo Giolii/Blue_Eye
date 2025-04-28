@@ -6,6 +6,7 @@ import { Home, LogIn, UserPlus, LogOut, Ghost } from "lucide-react";
 import IconTooltip from "../reusable/IconToolTip";
 import { useScroll } from "../../contexts/ScrollContext";
 import ProfileTooltip from "../reusable/ProfileTooltip";
+import NotificationBell from "../NotificationBell";
 
 const Sidebar = () => {
   const { currentUser, logout, guestLogin } = useAuth();
@@ -68,6 +69,7 @@ const Sidebar = () => {
                   <LogOut className="w-6 h-6" />
                 </button>
               </IconTooltip>
+              <NotificationBell />
             </>
           ) : (
             <>

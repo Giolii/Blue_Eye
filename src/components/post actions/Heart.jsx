@@ -14,7 +14,7 @@ const HeartButton = ({ post }) => {
   const { currentUser } = useAuth();
 
   useEffect(() => {
-    const hasLiked = post.likes.some((like) => like.userId === currentUser.id);
+    const hasLiked = post.likes?.some((like) => like.userId === currentUser.id);
     setIsLiked(hasLiked);
   }, [post.likes, currentUser.id]);
 

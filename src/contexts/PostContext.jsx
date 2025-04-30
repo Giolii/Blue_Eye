@@ -140,6 +140,7 @@ export function PostProvider({ children }) {
     <PostContext.Provider
       value={{
         posts,
+        setPosts,
         loading,
         error,
         fetchPosts,

@@ -1,4 +1,3 @@
-// src/components/NotificationBell.jsx
 import React, { useEffect, useRef, useState } from "react";
 import { useSocket } from "../contexts/SocketContext";
 import { Bell } from "lucide-react";

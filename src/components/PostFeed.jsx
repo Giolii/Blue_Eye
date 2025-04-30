@@ -3,10 +3,10 @@ import { usePosts } from "../contexts/PostContext";
 import PostSkeletonLoader from "./reusable/PostSkeleton";
 import PostCard from "./PostCard";
 import { motion, AnimatePresence } from "motion/react";
+import Comments from "./Comments";
 
 const PostFeed = () => {
   const { fetchPosts, posts } = usePosts();
-  const { showNotification } = usePosts();
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -63,11 +63,6 @@ const PostFeed = () => {
 
   return (
     <>
-      {showNotification && (
-        <div className="fixed top-4 left-0 right-0 mx-auto w-64 bg-green-500 text-white py-2 px-4 rounded-md shadow-md text-center">
-          REPORTED
-        </div>
-      )}
       <div className="flex flex-col gap-4">
         {posts && posts.length > 0 ? (
           <div className="h-full flex flex-col divide-y divide-amber-50/10">

@@ -4,33 +4,13 @@ import axios from "axios";
 import { usePosts } from "../contexts/PostContext";
 import SpringDiv from "./reusable/SpringDiv";
 
-const CommentActions = ({ comment, setEditComment }) => {
+const CommentActions = ({ comment, setEditComment, setPostPage }) => {
   const [showActions, setShowActions] = useState(false);
-  const { setPosts } = usePosts();
+  const { deleteComment } = usePosts();
 
   const handleDelete = async () => {
     try {
-      const repsonse = await axios.delete(
-        `${import.meta.env.VITE_API_URL}/posts/${comment.postId}/comments/${
-          comment.id
-        }`,
-        { withCredentials: true }
-      );
-      setPosts((prev) => {
-        const updatedPosts = [...prev];
-        const postIndex = updatedPosts.findIndex(
-          (post) => post.id === comment.postId
-        );
-        updatedPosts[postIndex] = {
-          ...updatedPosts[postIndex],
-          comments: [
-            ...updatedPosts[postIndex].comments.filter(
-              (comm) => comm.id !== comment.id
-            ),
-          ],
-        };
-        return updatedPosts;
-      });
+      deleteComment(comment, setPostPage);
     } catch (error) {
       console.error(error.message);
     }

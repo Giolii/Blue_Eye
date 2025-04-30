@@ -132,6 +132,91 @@ export function PostProvider({ children }) {
     setPosts((prev) => [post, ...prev]);
   };
 
+  const sendComment = async (draftComment, post, setPostsPage = setPosts) => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/posts/${post.id}/comments`,
+        { content: draftComment },
+        { withCredentials: true }
+      );
+      const newComment = response.data;
+      setPostsPage((prev) => {
+        const updatedPosts = [...prev];
+        const postIndex = updatedPosts.findIndex((p) => p.id === post.id);
+        if (postIndex !== -1) {
+          updatedPosts[postIndex] = {
+            ...updatedPosts[postIndex],
+            comments: [...updatedPosts[postIndex].comments, newComment],
+          };
+        }
+        return updatedPosts;
+      });
+    } catch (error) {
+      setError(error.message);
+      throw error;
+    }
+  };
+  const updateComment = async (
+    commentDraft,
+    comment,
+    setPostsPage = setPosts
+  ) => {
+    try {
+      const response = await axios.put(
+        `${import.meta.env.VITE_API_URL}/posts/${comment.postId}/comments/${
+          comment.id
+        }`,
+        { content: commentDraft },
+        { withCredentials: true }
+      );
+
+      setPostsPage((prev) => {
+        const updatedPosts = [...prev];
+        const postIndex = updatedPosts.findIndex(
+          (post) => post.id === comment.postId
+        );
+        const commentIndex = updatedPosts[postIndex].comments.findIndex(
+          (comm) => comm.id === comment.id
+        );
+        if (postIndex !== -1) {
+          updatedPosts[postIndex].comments[commentIndex].content = commentDraft;
+        }
+        return updatedPosts;
+      });
+    } catch (error) {
+      setError(error.message);
+      throw error;
+    }
+  };
+  const deleteComment = async (comment, setPostsPage = setPosts) => {
+    try {
+      const response = await axios.delete(
+        `${import.meta.env.VITE_API_URL}/posts/${comment.postId}/comments/${
+          comment.id
+        }`,
+        { withCredentials: true }
+      );
+      setPostsPage((prev) => {
+        const updatedPosts = [...prev];
+        const postIndex = updatedPosts.findIndex(
+          (post) => post.id === comment.postId
+        );
+        updatedPosts[postIndex] = {
+          ...updatedPosts[postIndex],
+          comments: [
+            ...updatedPosts[postIndex].comments.filter(
+              (comm) => comm.id !== comment.id
+            ),
+          ],
+        };
+        return updatedPosts;
+      });
+    } catch (error) {
+      setError(error.message);
+      throw error;
+    }
+  };
+
   useEffect(() => {
     fetchPosts();
   }, []);
@@ -150,6 +235,9 @@ export function PostProvider({ children }) {
         updatePost,
         deletePost,
         addPost,
+        sendComment,
+        updateComment,
+        deleteComment,
       }}
     >
       {children}

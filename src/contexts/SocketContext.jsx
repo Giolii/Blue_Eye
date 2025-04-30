@@ -37,15 +37,15 @@ export const SocketProvider = ({ children }) => {
 
   // Initialize and manage socket connection
   useEffect(() => {
+    if (!currentUser) return;
+
     const socketInstance = io(API_URL, { withCredentials: true });
 
-    // Authentication events from your backend
     socketInstance.on("authenticated", (data) => {
       console.log("User authenticated:", data);
       loadNotifications();
     });
 
-    // Notification event (this should be emitted from somewhere in your backend)
     socketInstance.on("notification", (data) => {
       console.log("Received notification:", data);
 
@@ -59,6 +59,11 @@ export const SocketProvider = ({ children }) => {
       setUnreadCount((prev) => prev + 1);
     });
 
+    // Handle connection errors
+    socketInstance.on("connect_error", (error) => {
+      console.error("Socket connection error:", error);
+    });
+
     setSocket(socketInstance);
 
     return () => {
@@ -67,7 +72,7 @@ export const SocketProvider = ({ children }) => {
         setSocket(null);
       }
     };
-  }, [API_URL, loadNotifications]);
+  }, [API_URL, currentUser]);
 
   // Notification management functions
   const markAllAsRead = async () => {

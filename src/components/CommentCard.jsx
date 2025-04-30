@@ -7,37 +7,19 @@ import { usePosts } from "../contexts/PostContext";
 import axios from "axios";
 import TimeAgo from "../utils/TimeAgoComponent";
 
-const CommentCard = ({ comment }) => {
+const CommentCard = ({ comment, setPostPage }) => {
   const [editComment, setEditComment] = useState(false);
   const [commentDraft, setCommentDraft] = useState(comment.content);
   const { currentUser } = useAuth();
-  const { setPosts } = usePosts();
+  const { updateComment } = usePosts();
 
   const handleUpdateComment = async () => {
     if (!commentDraft.trim()) return;
     if (commentDraft === comment.content) return;
 
     try {
-      const response = await axios.put(
-        `${import.meta.env.VITE_API_URL}/posts/${comment.postId}/comments/${
-          comment.id
-        }`,
-        { content: commentDraft },
-        { withCredentials: true }
-      );
+      updateComment(commentDraft, comment, setPostPage);
       setEditComment(false);
-      // Backend. keep it on the same position even if updated at@
-      setPosts((prev) => {
-        const updatedPosts = [...prev];
-        const postIndex = updatedPosts.findIndex(
-          (post) => post.id === comment.postId
-        );
-        const commentIndex = updatedPosts[postIndex].comments.findIndex(
-          (comm) => (comm.id = comment.id)
-        );
-        updatedPosts[postIndex].comments[commentIndex] = response.data;
-        return updatedPosts;
-      });
     } catch (error) {
       console.error(error.message);
     }
@@ -104,6 +86,7 @@ const CommentCard = ({ comment }) => {
                   <CommentActions
                     comment={comment}
                     setEditComment={setEditComment}
+                    setPostPage={setPostPage}
                   />
                 ))}
             </div>

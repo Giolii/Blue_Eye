@@ -141,7 +141,7 @@ const PostCard = ({ post, setPostsPage }) => {
           <PostActions post={post} setShowComments={setShowComments} />
         </div>
       </div>
-      {showComments && <Comments post={post} />}
+      {showComments && <Comments post={post} setPostPage={setPostsPage} />}
     </div>
   );
 };

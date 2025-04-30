@@ -1,11 +1,10 @@
 import { useRef, useState } from "react";
-import axios from "axios";
 import { usePosts } from "../contexts/PostContext";
 import CommentCard from "./CommentCard";
 
-const Comments = ({ post }) => {
+const Comments = ({ post, setPostPage }) => {
   const [draftComment, setDraftComment] = useState("");
-  const { setPosts } = usePosts();
+  const { sendComment } = usePosts();
   const commentsRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -20,26 +19,8 @@ const Comments = ({ post }) => {
   const handleSendComment = async () => {
     try {
       if (!draftComment.trim()) return;
-
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/posts/${post.id}/comments`,
-        { content: draftComment },
-        { withCredentials: true }
-      );
-      const newComment = response.data;
+      sendComment(draftComment, post, setPostPage);
       setDraftComment("");
-      setPosts((prev) => {
-        const updatedPosts = [...prev];
-        const postIndex = updatedPosts.findIndex((p) => p.id === post.id);
-        if (postIndex !== -1) {
-          updatedPosts[postIndex] = {
-            ...updatedPosts[postIndex],
-            comments: [...updatedPosts[postIndex].comments, newComment],
-          };
-        }
-
-        return updatedPosts;
-      });
       scrollToBottom();
     } catch (error) {
       console.error("Failed to add comment:", error);
@@ -68,7 +49,11 @@ const Comments = ({ post }) => {
       >
         {post?.comments &&
           post.comments.map((comment) => (
-            <CommentCard key={comment.id} comment={comment} />
+            <CommentCard
+              key={comment.id}
+              comment={comment}
+              setPostPage={setPostPage}
+            />
           ))}
       </div>
 

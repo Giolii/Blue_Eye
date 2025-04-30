@@ -77,10 +77,37 @@ const NotificationBell = () => {
                       notification.read ? "bg-gray-50" : "bg-blue-50"
                     }`}
                   >
-                    <p className="text-sm font-medium text-gray-800">
-                      {notification.message}
-                    </p>
-                    <p className="text-xs text-gray-500 mt-1">
+                    <div className="flex gap-3">
+                      <div className="flex-shrink-0 w-5 h-5 border border-gray-400 rounded-full overflow-hidden ">
+                        <img
+                          className="w-full h-full object-cover"
+                          src={notification.data.sentBy?.avatar || null}
+                          alt="avatar"
+                        />
+                      </div>
+                      <div className="">
+                        <p className="text-sm font-medium text-gray-800">
+                          {notification.message}
+                        </p>
+                        <div className="flex gap-2 items-center">
+                          {notification.data.imageUrl && (
+                            <div className="flex-shrink-0 w-10 h-10 border border-gray-400 overflow-hidden ">
+                              <img
+                                src={notification.data.imageUrl}
+                                alt="imageUrl"
+                              />
+                            </div>
+                          )}
+                          {notification.data.content && (
+                            <span className=" text-gray-600 text-sm line-clamp-2   ">
+                              "{notification.data.content}"
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    <p className="flex justify-end  text-xs text-gray-500 mt-1">
                       <TimeAgo dateString={notification.createdAt} />
                     </p>
                   </div>

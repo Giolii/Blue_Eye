@@ -25,15 +25,16 @@
 [x] on edit profile pic is small
 [x] post with likes in undeletable
 [x] notification websocket system
-[] comments
-[] fix user profile page (no comments form backend)
-[] comments notifications
+[x] comments
+[x] fix user profile page (no comments form backend)
+[x] comments notifications
+[] Post page, click on post, post page posts/:postid/view
+[] Post page link even on shared posts
 [] Followers
 [] Follow User
 [] Followers number
 [] followers notifications
 [] make notifications link to the post
-[] Post page, clikc on post, post page posts/:postid/view
 [] websocket yellow connection error on console
 [] user profile when more than 10 posts load when scrolling doesnt update
 [] style
@@ -54,7 +55,7 @@ Later
 [] load 10 notifications then scroll to update
 [] with credentials true ablished
 [] Like on comments
-[]
+[] Single Post page show the post with the comments visible in a full page length
 []
 []
 []

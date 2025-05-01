@@ -2,11 +2,13 @@ import React, { useEffect, useRef, useState } from "react";
 import { useSocket } from "../contexts/SocketContext";
 import { Bell } from "lucide-react";
 import TimeAgo from "../utils/TimeAgoComponent";
+import { Link, useNavigate } from "react-router-dom";
 
 const NotificationBell = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { notifications, unreadCount, markAllAsRead, clearAll } = useSocket();
   const notificationRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -34,6 +36,11 @@ const NotificationBell = () => {
     setIsOpen(!isOpen);
 
     markAllAsRead();
+  };
+
+  const handleClickNotification = (postId) => {
+    navigate(`/posts/${postId}`);
+    setIsOpen(false);
   };
 
   return (
@@ -85,7 +92,12 @@ const NotificationBell = () => {
                           alt="avatar"
                         />
                       </div>
-                      <div className="">
+                      <div
+                        className=""
+                        onClick={() =>
+                          handleClickNotification(notification.postId)
+                        }
+                      >
                         <p className="text-sm font-medium text-gray-800">
                           {notification.message}
                         </p>

@@ -94,7 +94,7 @@ export function PostProvider({ children }) {
 
   const fetchSinglePost = async (id) => {
     try {
-      const res = await axios.get(`${API_URL}/posts/${id}`, content, {
+      const res = await axios.get(`${API_URL}/posts/${id}`, {
         withCredentials: true,
       });
       return res.data.post;
@@ -229,6 +229,7 @@ export function PostProvider({ children }) {
         loading,
         error,
         fetchPosts,
+        fetchSinglePost,
         fetchUserPost,
         fetchUserById,
         createPost,

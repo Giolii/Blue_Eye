@@ -6,6 +6,7 @@ import MainLayout from "./layouts/MainLayout";
 import Sidebar from "./components/navigation/Sidebar";
 import UserProfile from "./pages/UserProfile";
 import { User } from "lucide-react";
+import SinglePost from "./pages/SinglePost";
 
 // import axios from "axios";
 // axios.defaults.withCredentials = true;
@@ -18,6 +19,7 @@ function App() {
         <Route element={<MainLayout />}>
           <Route path="/" index element={<Home />} />
           <Route path="/users/:userId" element={<UserProfile />} />
+          <Route path="/posts/:postId" element={<SinglePost />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
         </Route>

@@ -4,18 +4,19 @@ import { useState } from "react";
 import { usePosts } from "../contexts/PostContext";
 import ProfileTooltip from "./reusable/ProfileTooltip";
 import { useAuth } from "../contexts/AuthContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import PostActions from "./PostActions";
 import SharedPost from "./SharedPost";
 import TimeAgo from "../utils/TimeAgoComponent";
 import Comments from "./Comments";
 
-const PostCard = ({ post, setPostsPage }) => {
+const PostCard = ({ post, setPostsPage, openComments = false }) => {
   const [editPost, setEditPost] = useState(false);
   const [editDraft, setEditDraft] = useState(post.content);
-  const [showComments, setShowComments] = useState(false);
+  const [showComments, setShowComments] = useState(openComments);
   const { updatePost, deletePost } = usePosts();
   const { currentUser } = useAuth();
+  const navigate = useNavigate();
 
   const handleUpdate = async () => {
     try {
@@ -84,19 +85,16 @@ const PostCard = ({ post, setPostsPage }) => {
               onDelete={handleDeletePost}
               post={post}
             />
-            <span className="text-amber-50/50 text-xs flex items-center gap-1 absolute bottom-0 right-0 p-2">
+            <span className=" text-amber-50/50 text-xs flex items-center gap-1 absolute bottom-0 right-0 p-2">
               <Timer size={12} />
               <TimeAgo dateString={post.createdAt} />
             </span>
           </div>
 
           {/* Post content */}
+
           <div
-            className={`overflow-hidden transition-all duration-300 ease-in-out mb-3${
-              editPost
-                ? "opacity-100 translate-y-0 z-10"
-                : "opacity-0 -translate-y-4 pointer-events-none z-0"
-            }`}
+            className={` overflow-hidden transition-all duration-300 ease-in-out mb-3`}
           >
             {editPost ? (
               <div className="transition-opacity duration-300">
@@ -126,18 +124,25 @@ const PostCard = ({ post, setPostsPage }) => {
                 </div>
               </div>
             ) : (
-              <div className="text-amber-50 whitespace-pre-wrap break-words mt-2 p-2">
-                {post.content}
+              <div>
+                <Link to={`/posts/${post.id}`}>
+                  <div className="text-amber-50 whitespace-pre-wrap break-words mt-2 p-2">
+                    {post.content}
+                  </div>
+                </Link>
               </div>
             )}
             {/* Shared Post */}
-            {post.originalPost && <SharedPost post={post.originalPost} />}
-            {post.imageUrl && (
-              <div className="bg-gray-50 flex justify-center border border-gray-400 rounded-xl overflow-hidden">
-                <img src={post.imageUrl} alt="Picture" />
-              </div>
-            )}
+            <div onClick={() => navigate(`/posts/${post.originalPost.id}`)}>
+              {post.originalPost && <SharedPost post={post.originalPost} />}
+              {post.imageUrl && (
+                <div className="bg-gray-50 flex justify-center border border-gray-400 rounded-xl overflow-hidden">
+                  <img src={post.imageUrl} alt="Picture" />
+                </div>
+              )}
+            </div>
           </div>
+
           <PostActions post={post} setShowComments={setShowComments} />
         </div>
       </div>

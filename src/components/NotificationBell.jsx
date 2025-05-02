@@ -34,12 +34,16 @@ const NotificationBell = () => {
 
   const handleOpenBell = () => {
     setIsOpen(!isOpen);
-
-    markAllAsRead();
+    // markAllAsRead();
   };
 
-  const handleClickNotification = (postId) => {
-    navigate(`/posts/${postId}`);
+  const handleClickNotification = (notification) => {
+    if (notification.type === "USER_FOLLOW") {
+      navigate(`/users/${notification.data.sentBy.id}`);
+      setIsOpen(false);
+      return;
+    }
+    navigate(`/posts/${notification.postId}`);
     setIsOpen(false);
   };
 
@@ -94,9 +98,7 @@ const NotificationBell = () => {
                       </div>
                       <div
                         className=""
-                        onClick={() =>
-                          handleClickNotification(notification.postId)
-                        }
+                        onClick={() => handleClickNotification(notification)}
                       >
                         <p className="text-sm font-medium text-gray-800">
                           {notification.message}

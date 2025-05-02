@@ -3,7 +3,6 @@ import { usePosts } from "../contexts/PostContext";
 import PostSkeletonLoader from "./reusable/PostSkeleton";
 import PostCard from "./PostCard";
 import { motion, AnimatePresence } from "motion/react";
-import Comments from "./Comments";
 
 const PostFeed = () => {
   const { fetchPosts, posts } = usePosts();

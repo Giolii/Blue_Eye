@@ -89,9 +89,6 @@ export function PostProvider({ children }) {
     }
   };
 
-  // Still not sure i am gonna use these functions
-  // May need them if just modifying state isn't enough and I need more up-to-date data
-
   const fetchSinglePost = async (id) => {
     try {
       const res = await axios.get(`${API_URL}/posts/${id}`, {
@@ -104,9 +101,10 @@ export function PostProvider({ children }) {
     }
   };
 
-  const fetchUserPost = async (id) => {
+  const fetchUserPost = async (id, page = 1, limit = 10) => {
     try {
       const res = await axios.get(`${API_URL}/posts/users/${id}`, {
+        params: { page, limit },
         withCredentials: true,
       });
       return res.data;

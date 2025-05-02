@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { usePosts } from "../contexts/PostContext";
 import { useParams } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
 import PostSkeletonLoader from "../components/reusable/PostSkeleton";
 import { motion, AnimatePresence } from "motion/react";
 import PostCard from "../components/PostCard";
@@ -9,7 +8,6 @@ import PostCard from "../components/PostCard";
 const SinglePost = () => {
   const [posts, setPosts] = useState([]);
   const { postId } = useParams();
-  const { currentUser } = useAuth();
   const [isLoading, setisLoading] = useState(true);
   const { fetchSinglePost } = usePosts();
 

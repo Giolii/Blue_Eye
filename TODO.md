@@ -28,20 +28,19 @@
 [x] comments
 [x] fix user profile page (no comments form backend)
 [x] comments notifications
-[] Post page, click on post, post page posts/:postid/view
-[] Post page link even on shared posts
-[] Followers
-[] Follow User
-[] Followers number
+[x] make notifications link to the post
+[x] Post page, click on post, post page posts/:postid/view
+[x] Post page link even on shared posts
+[x] Followers
+[x] Follow User
+[x] Followers number
 [] followers notifications
-[] make notifications link to the post
-[] websocket yellow connection error on console
 [] user profile when more than 10 posts load when scrolling doesnt update
+[] desktop style
 [] style
 []
 []
 Later
-[] check all functionalities for desktop
 [] make a smaller width app centered when desktop mode
 [] posts in user profile doesnt delete like the other in feed, no animation
 [] show on navbar where you are right now
@@ -56,7 +55,8 @@ Later
 [] with credentials true ablished
 [] Like on comments
 [] Single Post page show the post with the comments visible in a full page length
-[]
+[] Update user Name in profile page
+[] follow in shared posts user
 []
 []
 []

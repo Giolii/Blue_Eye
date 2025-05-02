@@ -1,6 +1,6 @@
-import { Timer } from "lucide-react";
+import { Handshake, Timer, UserPlus } from "lucide-react";
 import DotsMenu from "./DotsMenu";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePosts } from "../contexts/PostContext";
 import ProfileTooltip from "./reusable/ProfileTooltip";
 import { useAuth } from "../contexts/AuthContext";
@@ -9,13 +9,15 @@ import PostActions from "./PostActions";
 import SharedPost from "./SharedPost";
 import TimeAgo from "../utils/TimeAgoComponent";
 import Comments from "./Comments";
+import IconToolTip from "./reusable/IconToolTip";
 
 const PostCard = ({ post, setPostsPage, openComments = false }) => {
   const [editPost, setEditPost] = useState(false);
   const [editDraft, setEditDraft] = useState(post.content);
   const [showComments, setShowComments] = useState(openComments);
   const { updatePost, deletePost } = usePosts();
-  const { currentUser } = useAuth();
+  const { currentUser, followUser, followers, following, unfollowUser } =
+    useAuth();
   const navigate = useNavigate();
 
   const handleUpdate = async () => {
@@ -49,6 +51,14 @@ const PostCard = ({ post, setPostsPage, openComments = false }) => {
     deletePost(post.id, setPostsPage);
   };
 
+  const handleFollowUser = async (userId) => {
+    const response = await followUser(userId);
+  };
+
+  const handleUnfollowUser = async (userId) => {
+    const response = await unfollowUser(userId);
+  };
+
   return (
     <div>
       <div className="flex gap-2 relative border border-gray-400 p-2 rounded-xl ">
@@ -68,14 +78,41 @@ const PostCard = ({ post, setPostsPage, openComments = false }) => {
         </div>
         <div className="flex-1">
           {/* Post header */}
-          <div className="flex items-center justify-between mb-1">
-            <div className="flex flex-col items-center">
-              <Link
-                className="font-semibold text-amber-50"
-                to={`/users/${post.userId}`}
-              >
-                {post.user ? post.user.username : "Unknown User"}
-              </Link>
+          <div className="flex  justify-between mb-1">
+            <div className="flex flex-col ">
+              <div className="flex gap-2 items-center">
+                <Link
+                  className="font-semibold text-amber-50"
+                  to={`/users/${post.userId}`}
+                >
+                  {post.user.name || post.user.username || "Anonymous"}
+                </Link>
+                {currentUser.id === post.userId ? (
+                  <span className="bg-amber-200 rounded-md px-1 text-sm">
+                    You
+                  </span>
+                ) : following.find(
+                    (foll) => foll.followingId === post.userId
+                  ) ? (
+                  <span
+                    className="text-pink-300"
+                    onClick={() => handleUnfollowUser(post.userId)}
+                  >
+                    <IconToolTip label={"Unfollow User"}>
+                      <Handshake className="w-4" />
+                    </IconToolTip>
+                  </span>
+                ) : (
+                  <span
+                    className="text-gray-300"
+                    onClick={() => handleFollowUser(post.userId)}
+                  >
+                    <IconToolTip label={"Follow User"}>
+                      <UserPlus className="w-4" />
+                    </IconToolTip>
+                  </span>
+                )}
+              </div>
               <span className="text-amber-50/50 text-xs flex items-center gap-1">
                 @{post.user && post.user.username}
               </span>
@@ -141,6 +178,7 @@ const PostCard = ({ post, setPostsPage, openComments = false }) => {
                 </div>
               )}
             </div>
+            {/* {post.originalPost && <PostCard post={post.originalPost} />} */}
           </div>
 
           <PostActions post={post} setShowComments={setShowComments} />

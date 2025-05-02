@@ -12,6 +12,8 @@ export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [followers, setFollowers] = useState([]);
+  const [following, setFollowing] = useState([]);
 
   const verifyUser = async () => {
     try {
@@ -19,6 +21,9 @@ export function AuthProvider({ children }) {
         withCredentials: true,
       });
       setCurrentUser(response.data.user);
+      const response2 = await fetchFollowers(response.data.user.id);
+      setFollowers(response2.followers);
+      setFollowing(response2.following);
     } catch (error) {
       if (error.status !== 401) {
         console.error("User verification failed:", error);
@@ -115,6 +120,52 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const followUser = async (userId) => {
+    try {
+      const response = await axios.post(
+        `${API_URL}/users/${userId}/follow`,
+        {},
+        { withCredentials: true }
+      );
+      setFollowing((prev) => [...prev, response.data]);
+      return response.data;
+    } catch (error) {
+      console.error(error.response.data.error);
+      setError(error.response?.data.message || "Failed to follow user");
+    }
+  };
+
+  const unfollowUser = async (userId) => {
+    try {
+      const response = await axios.post(
+        `${API_URL}/users/${userId}/unfollow`,
+        {},
+        { withCredentials: true }
+      );
+      // it unfollow the user but it doesnt upload the ui
+      setFollowing((prev) =>
+        prev.filter((foll) => foll.followingId !== userId)
+      );
+
+      return response.data;
+    } catch (error) {
+      console.error(error.response?.data?.error);
+      setError(error.response?.data.message || "Failed to follow user");
+    }
+  };
+
+  const fetchFollowers = async (userId) => {
+    try {
+      const response = await axios.get(`${API_URL}/users/${userId}/followers`, {
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      console.error(error.response.data.error);
+      setError(error.response?.data.message || "Failed to fetch followers");
+    }
+  };
+
   const value = {
     currentUser,
     error,
@@ -124,6 +175,10 @@ export function AuthProvider({ children }) {
     register,
     logout,
     verifyUser,
+    followUser,
+    followers,
+    following,
+    unfollowUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

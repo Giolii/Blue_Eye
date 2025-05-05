@@ -33,8 +33,10 @@ const NotificationBell = () => {
   }, [isOpen]);
 
   const handleOpenBell = () => {
-    setIsOpen(!isOpen);
-    // markAllAsRead();
+    if (isOpen) {
+      setIsOpen(false);
+      markAllAsRead();
+    } else setIsOpen(true);
   };
 
   const handleClickNotification = (notification) => {
@@ -48,7 +50,7 @@ const NotificationBell = () => {
   };
 
   return (
-    <div className="relative" ref={notificationRef}>
+    <div className="relative z-50" ref={notificationRef}>
       <button onClick={handleOpenBell} className="relative p-2 text-text">
         <Bell />
         {unreadCount > 0 && (
@@ -59,7 +61,7 @@ const NotificationBell = () => {
       </button>
 
       {isOpen && (
-        <div className="absolute left-0 mt-2 w-80 bg-white rounded-lg shadow-lg z-50 border border-gray-200">
+        <div className="absolute left-0 mt-2 w-80 bg-white rounded-lg shadow-lg z-50 border border-gray-200 ">
           <div className="p-4">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold text-black">

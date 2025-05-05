@@ -8,9 +8,8 @@ const MainLayout = () => {
 
   const publicPaths = ["/login", "/register"];
 
-  if (loading) {
-    return <LoadingSpinner />;
-  }
+  if (loading) return;
+
   if (!currentUser && !publicPaths.includes(location.pathname)) {
     return <Navigate to="/login" replace state={{ from: location }} />;
   }

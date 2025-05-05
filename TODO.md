@@ -34,32 +34,43 @@
 [x] Followers
 [x] Follow User
 [x] Followers number
-[] followers notifications
-[] user profile when more than 10 posts load when scrolling doesnt update
-[] desktop style
-[] style
+[x] followers notifications
+[x] notification read only when closed the bell
+[x] user profile when more than 10 posts load when scrolling doesnt update
+[x] loading at start doesn't show the posts loading, only navbar centered
+[x] make a smaller width app centered when desktop mode
+[x] count on posts user profile
+[x] edit name on user Profile
+[x] Logo
+[] Navbar
+[] notificatio doesnt act on z50
+[] Post composer
+[] Feed Lines or cards
+[] single Cards
 []
-[]
-Later
-[] make a smaller width app centered when desktop mode
+
+Later:
+
 [] posts in user profile doesnt delete like the other in feed, no animation
 [] show on navbar where you are right now
-[] Message User
 [] error context notification for all the errors
-[] loading at start doesn't show the posts loading, only navbar centered
-[] fix tests using original 'app.js'
-[] get notification even if you have 2 tabs open wiht the same account
 [] Animate bell when notification arrives or when it logs in and there are notifications
-[] if trying to edit/like/cancel a deleted post, show message and delete itd
-[] load 10 notifications then scroll to update
+[] if trying to edit/like/cancel a deleted post, show message and delete it
 [] with credentials true ablished
 [] Like on comments
-[] Single Post page show the post with the comments visible in a full page length
 [] Update user Name in profile page
-[] follow in shared posts user
+[] load 10 notifications then scroll to update
+[] Single Post page show the post with the comments visible in a full page length
+[] when change name in user Profile the infinity scroll breaks
 []
-[]
-[]
+
+Future:
+
+[] follow in shared posts user (interesting recursive PostCard approach)
+[] Live messaging between users
+[] fix tests Backend
+[] Make test Frontend
+[] get notification even if you have 2 tabs open wiht the same account (possible? notification use set so only one id right?)
 []
 []
 []

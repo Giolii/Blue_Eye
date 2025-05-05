@@ -173,7 +173,7 @@ const PostCard = ({ post, setPostsPage, openComments = false }) => {
             <div onClick={() => navigate(`/posts/${post.originalPost.id}`)}>
               {post.originalPost && <SharedPost post={post.originalPost} />}
               {post.imageUrl && (
-                <div className="bg-gray-50 flex justify-center border border-gray-400 rounded-xl overflow-hidden">
+                <div className="bg-gray-50 flex justify-center border border-gray-400 rounded-xl overflow-hidden max-w-md ">
                   <img src={post.imageUrl} alt="Picture" />
                 </div>
               )}

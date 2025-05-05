@@ -5,7 +5,6 @@ import Login from "./pages/Login";
 import MainLayout from "./layouts/MainLayout";
 import Sidebar from "./components/navigation/Sidebar";
 import UserProfile from "./pages/UserProfile";
-import { User } from "lucide-react";
 import SinglePost from "./pages/SinglePost";
 
 // import axios from "axios";
@@ -14,16 +13,18 @@ import SinglePost from "./pages/SinglePost";
 function App() {
   return (
     <div className="flex  h-screen justify-center ">
-      <Sidebar />
-      <Routes>
-        <Route element={<MainLayout />}>
-          <Route path="/" index element={<Home />} />
-          <Route path="/users/:userId" element={<UserProfile />} />
-          <Route path="/posts/:postId" element={<SinglePost />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-        </Route>
-      </Routes>
+      <div className="flex min-w-full sm:min-w-2xl border border-gray-600  overflow-hidden shadow-2xl ">
+        <Sidebar />
+        <Routes>
+          <Route element={<MainLayout />}>
+            <Route path="/" index element={<Home />} />
+            <Route path="/users/:userId" element={<UserProfile />} />
+            <Route path="/posts/:postId" element={<SinglePost />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+          </Route>
+        </Routes>
+      </div>
     </div>
   );
 }

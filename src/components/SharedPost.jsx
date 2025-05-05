@@ -15,14 +15,14 @@ const SharedPost = ({ post }) => {
           <div className="flex-1">
             {/* Post header */}
             <div className="flex items-center justify-between mb-1 ">
-              <div className="flex flex-col items-center ">
+              <div className="flex flex-col">
                 <Link
                   className="font-semibold text-amber-50"
                   to={`/users/${post.userId}`}
                 >
-                  {post.user ? post.user.username : "Unknown User"}
+                  {post.user.name || post.user.username || "Unknown User"}
                 </Link>
-                <span className="text-amber-50/50 text-xs flex items-center gap-1">
+                <span className="text-amber-50/50 text-xs">
                   @{post.user.username}
                 </span>
               </div>
@@ -34,7 +34,7 @@ const SharedPost = ({ post }) => {
             {post.content}
           </div>
           {post.imageUrl && (
-            <div className="bg-gray-50 flex justify-center  border border-gray-400 rounded-xl overflow-hidden">
+            <div className="bg-gray-50 flex justify-center  border border-gray-400 rounded-xl overflow-hidden max-w-md">
               <img src={post.imageUrl} alt="" />
             </div>
           )}

@@ -92,21 +92,15 @@ const EyeLogo = () => {
       setTimeout(triggerBlink, nextBlinkDelay);
     };
 
-    // Start the blinking cycle
     scheduleNextBlink();
-
-    // Clean up timeouts on unmount
-    return () => {
-      // No direct way to clear random timeouts, component will naturally stop when unmounted
-    };
   }, []);
 
   // Calculate pupil position
   const pupilPosition = calculatePupilPosition();
 
   return (
-    <div className="flex flex-col items-center ">
-      <span className="font-bold tracking-wider text-cyan-500">OPEN</span>
+    <div className="flex flex-col items-center p-2">
+      {/* <span className="font-bold tracking-wider text-cyan-500">OPEN</span> */}
 
       <div
         id="eye-container"
@@ -175,7 +169,7 @@ const EyeLogo = () => {
           }}
         />
       </div>
-      <span className="font-bold tracking-wider text-blue-400">WORLD</span>
+      {/* <span className="font-bold tracking-wider text-blue-400">WORLD</span> */}
       {/* Company Name */}
       {/* <div className="mt-2 text-center">
         <h1 className="text-xl  text-blue-600">

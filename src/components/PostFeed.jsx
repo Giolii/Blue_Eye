@@ -31,7 +31,7 @@ const PostFeed = () => {
       setHasMore(response.hasMore);
       setPage(response.nextPage);
     } catch (error) {
-      console.error("Error landing more posts:", error);
+      console.error("Error loading more posts:", error);
     } finally {
       setLoadingMore(false);
     }
@@ -64,7 +64,7 @@ const PostFeed = () => {
     <>
       <div className="flex flex-col gap-4">
         {posts && posts.length > 0 ? (
-          <div className="h-full flex flex-col divide-y divide-amber-50/10">
+          <div className="h-full flex flex-col divide-y divide-slate-300/20 dark:divide-slate-700/20">
             <AnimatePresence mode="popLayout">
               {posts.map((post, index) => (
                 <motion.div
@@ -81,7 +81,7 @@ const PostFeed = () => {
                   <article
                     key={post.id}
                     ref={index === posts.length - 1 ? lastPostElementRef : null}
-                    className="p-4 hover:bg-cyan-800/20 transition-colors"
+                    className="p-4 hover:bg-slate-200/50 dark:hover:bg-slate-700/30 transition-colors duration-200 rounded-lg"
                   >
                     <PostCard post={post} />
                   </article>
@@ -91,10 +91,14 @@ const PostFeed = () => {
             </AnimatePresence>
           </div>
         ) : (
-          <div className="h-full flex items-center justify-center text-amber-50/70 p-6 text-center">
-            <div>
-              <p className="mb-2">No posts yet</p>
-              <p className="text-sm">Be the first to share something!</p>
+          <div className="h-full flex items-center justify-center p-8 text-center">
+            <div className="bg-slate-100/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-xl p-6 border border-slate-300/30 dark:border-slate-700/30 shadow-lg">
+              <p className="mb-3 text-slate-700 dark:text-slate-200 font-medium">
+                No posts yet
+              </p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">
+                Be the first to share something!
+              </p>
             </div>
           </div>
         )}

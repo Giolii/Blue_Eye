@@ -25,11 +25,13 @@ const SinglePost = () => {
   }
 
   return (
-    <main className="flex-grow p-5 container flex flex-col  overflow-y-auto relative">
-      {" "}
-      <div className="flex flex-col gap-4">
+    <main
+      className="flex-grow p-5 container flex flex-col overflow-y-auto relative 
+                     bg-gradient-to-br from-transparent to-slate-200/30 dark:to-slate-800/30"
+    >
+      <div className="flex flex-col gap-4 max-w-2xl mx-auto w-full">
         {posts && posts.length > 0 && (
-          <div className="h-full flex flex-col divide-y divide-amber-50/10">
+          <div className="h-full flex flex-col divide-y divide-slate-300/20 dark:divide-slate-700/20">
             <AnimatePresence mode="popLayout">
               {posts.map((post, index) => (
                 <motion.div
@@ -45,7 +47,8 @@ const SinglePost = () => {
                 >
                   <article
                     key={post.id}
-                    className="p-4 hover:bg-cyan-800/20 transition-colors"
+                    className="p-4 hover:bg-slate-200/50 dark:hover:bg-slate-700/30 
+                              transition-colors duration-200 rounded-lg"
                   >
                     <PostCard
                       post={post}

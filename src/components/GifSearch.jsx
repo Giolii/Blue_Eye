@@ -59,7 +59,7 @@ const GifSearch = ({ setOpenGif, setImageToSendPreview, setImageToSend }) => {
 
   return (
     <div
-      className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      className="z-50 fixed inset-0 bg-black/50 backdrop-blur-sm  flex items-center justify-center p-4"
       onClick={() => setOpenGif(false)}
     >
       <div

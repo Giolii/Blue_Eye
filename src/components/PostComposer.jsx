@@ -30,8 +30,8 @@ const PostComposer = () => {
     } catch (error) {
       console.error(error);
     } finally {
-      setImageToSend(false);
-      setImageToSendPreview(false);
+      setImageToSend(null);
+      setImageToSendPreview(null);
     }
   };
 
@@ -73,8 +73,14 @@ const PostComposer = () => {
           setImageToSend={setImageToSend}
         />
       )}
-      <div className="bg-gradient-to-r from-cyan-800 to-cyan-900 rounded-xl shadow-lg p-4 mb-6 transition-all duration-300">
-        <div className="flex flex-col gap-3">
+      <div
+        className="border border-slate-300/30 dark:border-slate-700/30 rounded-2xl 
+                    shadow-lg p-5 mb-6 transition-all duration-300 
+                    bg-gradient-to-br from-slate-100/90 to-blue-100/90 
+                    dark:from-slate-800/90 dark:to-slate-900/90 
+                    backdrop-filter backdrop-blur-sm"
+      >
+        <div className="flex flex-col gap-4">
           {/* Text area for post composition */}
           <div
             className="relative w-full"
@@ -83,59 +89,94 @@ const PostComposer = () => {
             <textarea
               value={postDraft}
               onFocus={() => setIsExpanded(true)}
-              onBlur={() => setIsExpanded(false)}
+              onBlur={() =>
+                !postDraft.trim() && !imageToSendPreview && setIsExpanded(false)
+              }
               onChange={(e) => setPostDraft(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="What's on your mind?"
-              className={`w-full p-3 rounded-lg bg-cyan-950/50 text-amber-50 placeholder-amber-50/50 border ${
-                isOverLimit
-                  ? "border-red-500"
-                  : "border-amber-50/20 focus:border-amber-50/60"
-              } outline-none resize-none transition-all duration-200 ${
-                isExpanded ? "h-24" : "h-12"
-              }`}
+              className={`w-full p-4 rounded-xl 
+                        text-slate-700 dark:text-slate-200 
+                        placeholder-slate-500/60 dark:placeholder-slate-400/60 
+                        bg-white/60 dark:bg-slate-700/60 
+                        border ${
+                          isOverLimit
+                            ? "border-red-500 dark:border-red-500"
+                            : "border-slate-300/50 dark:border-slate-600/50 focus:border-sky-400/60 dark:focus:border-sky-500/60"
+                        } 
+                        outline-none resize-none transition-all duration-300 ${
+                          isExpanded ? "h-28" : "h-14"
+                        } 
+                        shadow-inner focus:shadow-sky-400/5 dark:focus:shadow-sky-500/5`}
               rows={isExpanded ? 3 : 1}
               ref={inputRef}
             />
 
-            {/* Character counter */}
-            <div
-              className={`absolute bottom-2 right-3 text-xs ${
-                isOverLimit ? "text-red-400" : "text-amber-50/60"
-              }`}
-            >
-              {characterCount}/{charLimit}
-            </div>
+            {/* Character counter - only visible when expanded or typing */}
+            {(isExpanded || characterCount > 0) && (
+              <div
+                className={`absolute bottom-3 right-4 text-xs font-medium transition-all duration-200 ${
+                  isOverLimit
+                    ? "text-red-500 dark:text-red-400"
+                    : characterCount > charLimit * 0.8
+                    ? "text-amber-600 dark:text-amber-400"
+                    : "text-slate-500/70 dark:text-slate-400/70"
+                }`}
+              >
+                {characterCount}/{charLimit}
+              </div>
+            )}
           </div>
 
           {/* Picture Preview */}
           {imageToSendPreview && (
-            <div className="max-w-[200px]  mx-auto border  border-gray-400 rounded-xl relative flex justify-center overflow-hidden">
-              <button
-                className="absolute top-0 right-0  hover:opacity-80 "
-                onClick={() => {
-                  setImageToSendPreview(null);
-                  setImageToSend(null);
-                }}
+            <div className="relative mx-auto overflow-hidden transition-all duration-300 group">
+              <div
+                className="relative max-w-xs rounded-xl overflow-hidden 
+                           border border-slate-300/50 dark:border-slate-600/50 
+                           shadow-md"
               >
-                <X className="text-red-600 " />
-              </button>
-              <img src={imageToSendPreview} />
+                <button
+                  className="absolute top-2 right-2 p-1.5 
+                           bg-black/60 hover:bg-red-600/90 
+                           rounded-full transition-all duration-200 text-white"
+                  onClick={() => {
+                    setImageToSendPreview(null);
+                    setImageToSend(null);
+                  }}
+                  aria-label="Remove image"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+                <img
+                  src={imageToSendPreview}
+                  alt="Upload preview"
+                  className="w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+              </div>
             </div>
           )}
 
           {/* Action buttons */}
-          <div className={`flex items-center justify-between`}>
-            <div className="flex items-center gap-2">
+          <div className="flex items-center justify-between mt-1">
+            <div className="flex items-center gap-3">
               <button
                 onClick={() => fileInputRef.current.click()}
                 disabled={isUploadingPic}
-                className="p-1 sm:p-3 text-zinc-600 dark:text-zinc-400 hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors duration-200 relative rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-indigo-600"
+                className="p-2.5 rounded-full 
+                         text-slate-600 dark:text-slate-300 
+                         hover:text-sky-600 dark:hover:text-sky-400 
+                         transition-colors duration-200 
+                         hover:bg-slate-200/70 dark:hover:bg-slate-700/70 
+                         focus:outline-none focus:ring-2 focus:ring-offset-1 
+                         focus:ring-offset-slate-100 dark:focus:ring-offset-slate-800 
+                         focus:ring-sky-400/50 dark:focus:ring-sky-500/50 
+                         disabled:opacity-50"
                 aria-label="Upload image"
                 title="Upload image"
               >
                 {isUploadingPic ? (
-                  <Loader className="animate-spin h-5 w-5 text-indigo-500 dark:text-indigo-400" />
+                  <Loader className="animate-spin h-5 w-5 text-sky-500 dark:text-sky-400" />
                 ) : (
                   <Image className="h-5 w-5" />
                 )}
@@ -149,25 +190,40 @@ const PostComposer = () => {
                 />
               </button>
               <button
-                className="p-2 rounded-full text-amber-50 hover:bg-cyan-700/50 transition-colors"
+                className="p-2.5 rounded-full 
+                         text-slate-600 dark:text-slate-300 
+                         hover:text-indigo-600 dark:hover:text-indigo-400 
+                         transition-colors duration-200 
+                         hover:bg-slate-200/70 dark:hover:bg-slate-700/70 
+                         focus:outline-none focus:ring-2 focus:ring-offset-1 
+                         focus:ring-offset-slate-100 dark:focus:ring-offset-slate-800 
+                         focus:ring-indigo-400/50 dark:focus:ring-indigo-500/50"
                 title="Add GIF"
                 onClick={() => setOpenGif(true)}
+                aria-label="Add GIF"
               >
-                <ImagePlay size={18} />
+                <ImagePlay className="h-5 w-5" />
               </button>
             </div>
 
             <button
               onClick={handleSubmitPost}
               disabled={(!postDraft.trim() && !imageToSend) || isOverLimit}
-              className={`px-4 py-2 rounded-full flex items-center gap-2 transition-all duration-200 ${
-                (!postDraft.trim() && !imageToSend) || isOverLimit
-                  ? "bg-cyan-600/50 text-amber-50/50 cursor-not-allowed"
-                  : "bg-cyan-400 text-cyan-950 hover:bg-cyan-300"
-              }`}
+              className={`px-5 py-2.5 rounded-full flex items-center gap-2 font-medium 
+                       transition-all duration-300 transform ${
+                         (!postDraft.trim() && !imageToSend) || isOverLimit
+                           ? "bg-slate-300/50 dark:bg-slate-700/50 text-slate-500/50 dark:text-slate-400/30 cursor-not-allowed"
+                           : "bg-gradient-to-r from-sky-500 to-indigo-500 dark:from-sky-600 dark:to-indigo-600 text-white hover:from-sky-600 hover:to-indigo-600 dark:hover:from-sky-500 dark:hover:to-indigo-500 active:scale-95 hover:shadow-lg hover:shadow-sky-400/20 dark:hover:shadow-indigo-500/20"
+                       }`}
             >
-              <span>{isExpanded ? "Post" : ""}</span>
-              <Send size={16} />
+              <span className="transition-all duration-300 opacity-100">
+                {isExpanded || postDraft.trim() || imageToSend ? "Post" : ""}
+              </span>
+              <Send
+                className={`h-4 w-4 ${
+                  isExpanded || postDraft.trim() || imageToSend ? "ml-1" : ""
+                }`}
+              />
             </button>
           </div>
         </div>

@@ -7,7 +7,7 @@ const DotsMenu = ({ onEdit, onDelete, post }) => {
   const [isVisible, setIsVisible] = useState(false);
   const menuRef = useRef(null);
   const { currentUser } = useAuth();
-  const { success, error, info } = useToast();
+  const { success, errorToast, info } = useToast();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -35,6 +35,7 @@ const DotsMenu = ({ onEdit, onDelete, post }) => {
   const handleDelete = () => {
     setIsVisible(!isVisible);
     onDelete();
+    errorToast("Post deleted");
   };
   const handleReport = () => {
     setIsVisible(!isVisible);
@@ -43,9 +44,13 @@ const DotsMenu = ({ onEdit, onDelete, post }) => {
 
   return (
     <>
-      <div className="relative z-10" ref={menuRef}>
+      <div className="relative " ref={menuRef}>
         <button
-          className="text-amber-50/70 hover:text-amber-50 p-1 rounded-full hover:bg-cyan-700/30 transition-colors duration-100 "
+          className="text-slate-500 dark:text-slate-400 
+                   hover:text-slate-700 dark:hover:text-slate-300 
+                   p-1 rounded-full 
+                   hover:bg-slate-200/70 dark:hover:bg-slate-700/70 
+                   transition-colors duration-200"
           onClick={toggleMenu}
           aria-label="Menu Options"
         >
@@ -53,23 +58,36 @@ const DotsMenu = ({ onEdit, onDelete, post }) => {
         </button>
 
         <div
-          className={`absolute right-0 top-6 bg-slate-800 rounded-md shadow-lg   transition-all duration-100 ease-in-out ${
-            isVisible
-              ? "opacity-100 translate-y-0"
-              : "opacity-0 translate-y-1 pointer-events-none"
-          }`}
+          className={`absolute right-0 top-6 
+                     bg-white dark:bg-slate-800 
+                     rounded-lg shadow-lg overflow-hidden
+                     border border-slate-200/70 dark:border-slate-700/70
+                     min-w-32
+                     transition-all duration-150 ease-in-out ${
+                       isVisible
+                         ? "opacity-100 translate-y-0"
+                         : "opacity-0 translate-y-1 pointer-events-none"
+                     }`}
         >
           {currentUser.id === post.userId ? (
             <>
               <button
-                className="flex items-center w-full p-1 text-sm text-amber-50/90 hover:bg-cyan-700/30 hover:text-amber-300 transition-colors duration-150"
+                className="flex items-center w-full px-3 py-2 text-sm 
+                         text-slate-700 dark:text-slate-300 
+                         hover:bg-slate-100 dark:hover:bg-slate-700 
+                         hover:text-sky-600 dark:hover:text-sky-400 
+                         transition-colors duration-150"
                 onClick={handleEdit}
               >
                 <Pencil className="mr-2" size={16} />
                 Edit
               </button>
               <button
-                className="flex items-center w-full p-1 text-sm text-amber-50/90 hover:bg-cyan-700/30 hover:text-red-400 transition-colors duration-150"
+                className="flex items-center w-full px-3 py-2 text-sm 
+                         text-slate-700 dark:text-slate-300 
+                         hover:bg-slate-100 dark:hover:bg-slate-700 
+                         hover:text-rose-600 dark:hover:text-rose-400 
+                         transition-colors duration-150"
                 onClick={handleDelete}
               >
                 <XOctagon className="mr-2" size={16} />
@@ -78,7 +96,11 @@ const DotsMenu = ({ onEdit, onDelete, post }) => {
             </>
           ) : (
             <button
-              className="flex items-center w-full p-1 text-sm text-amber-50/90 hover:bg-cyan-700/30 hover:text-lime-500 transition-colors duration-150"
+              className="flex items-center w-full px-3 py-2 text-sm 
+                       text-slate-700 dark:text-slate-300 
+                       hover:bg-slate-100 dark:hover:bg-slate-700 
+                       hover:text-amber-600 dark:hover:text-amber-400 
+                       transition-colors duration-150"
               onClick={handleReport}
             >
               <Flag size={16} className="mr-2" />

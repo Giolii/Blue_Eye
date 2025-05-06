@@ -11,8 +11,7 @@ import {
   Trash2,
 } from "lucide-react";
 import TimeAgo from "../utils/TimeAgoComponent";
-import { Link, useNavigate } from "react-router-dom";
-import { createPortal } from "react-dom";
+import { useNavigate } from "react-router-dom";
 
 const NotificationBell = ({ setBookmark }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -99,7 +98,7 @@ const NotificationBell = ({ setBookmark }) => {
       {/* Bell icon with unread count badge */}
       <button
         onClick={handleOpenBell}
-        className="relative p-2 text-yellow-700 dark:text-yellow-500 hover:text-sky-600 dark:hover:text-sky-400 transition-all duration-200 focus:outline-none"
+        className="relative p-2 text-yellow-600 dark:text-yellow-500 hover:text-sky-600 dark:hover:text-sky-400 transition-all duration-200 focus:outline-none"
         aria-label={`Notifications ${
           unreadCount > 0 ? `(${unreadCount} unread)` : ""
         }`}

@@ -9,7 +9,8 @@ const Home = () => {
   const { mainContentRef } = useScroll();
   return (
     <main
-      className="flex-grow p-5 container flex flex-col  overflow-y-auto relative"
+      className="flex-grow p-1
+       sm:p-5 container flex flex-col  overflow-y-auto relative"
       ref={mainContentRef}
     >
       {loading && <PostSkeletonLoader count={5} />}

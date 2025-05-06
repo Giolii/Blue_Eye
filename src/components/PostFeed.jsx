@@ -81,7 +81,7 @@ const PostFeed = () => {
                   <article
                     key={post.id}
                     ref={index === posts.length - 1 ? lastPostElementRef : null}
-                    className="p-4 hover:bg-slate-200/50 dark:hover:bg-slate-700/30 transition-colors duration-200 rounded-lg"
+                    className="p-2 sm:p-4 hover:bg-slate-200/50 dark:hover:bg-slate-700/30 transition-colors duration-200 rounded-lg"
                   >
                     <PostCard post={post} />
                   </article>

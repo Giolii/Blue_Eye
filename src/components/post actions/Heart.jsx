@@ -57,15 +57,15 @@ const HeartButton = ({ post }) => {
         {/* Base heart that's always visible */}
         <Heart
           size={18}
-          className="transition-colors duration-200"
           fill={isLiked ? "#ec4899" : "none"}
           color={isLiked ? "#ec4899" : "currentColor"}
           strokeWidth={2}
-          className={
-            isLiked
-              ? "text-pink-500 dark:text-pink-400"
-              : "text-slate-500 dark:text-slate-400 group-hover:text-pink-400 dark:group-hover:text-pink-400"
-          }
+          className={`transition-colors duration-200
+            ${
+              isLiked
+                ? "text-pink-500 dark:text-pink-400"
+                : "text-slate-500 dark:text-slate-400 group-hover:text-pink-400 dark:group-hover:text-pink-400"
+            }`}
         />
 
         {/* Animation effects only after first click */}

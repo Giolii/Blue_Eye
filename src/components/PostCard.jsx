@@ -22,6 +22,7 @@ const PostCard = ({ post, setPostsPage, openComments = false }) => {
   const [editDraft, setEditDraft] = useState(post.content);
   const [showComments, setShowComments] = useState(openComments);
   const { updatePost, deletePost } = usePosts();
+
   const { currentUser, followUser, followers, following, unfollowUser } =
     useAuth();
   const navigate = useNavigate();
@@ -255,12 +256,12 @@ const PostCard = ({ post, setPostsPage, openComments = false }) => {
               <div
                 className="mt-3 rounded-xl overflow-hidden 
                             border border-slate-300/30 dark:border-slate-600/30 
-                            shadow-md max-w-full"
+                            shadow-md max-w-md"
               >
                 <img
                   src={post.imageUrl}
                   alt="Post media"
-                  className="w-full object-cover max-h-96"
+                  className="w-full object-cover"
                   onClick={() => window.open(post.imageUrl, "_blank")}
                 />
               </div>

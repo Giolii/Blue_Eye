@@ -2,7 +2,6 @@ import {
   Handshake,
   Timer,
   UserPlus,
-  Check,
   ChevronDown,
   MessageCircle,
 } from "lucide-react";
@@ -16,6 +15,7 @@ import PostActions from "./PostActions";
 import SharedPost from "./SharedPost";
 import TimeAgo from "../utils/TimeAgoComponent";
 import Comments from "./Comments";
+import renderTextWithLinks from "../utils/RenderLinks";
 
 const PostCard = ({ post, setPostsPage, openComments = false }) => {
   const [editPost, setEditPost] = useState(false);
@@ -231,14 +231,15 @@ const PostCard = ({ post, setPostsPage, openComments = false }) => {
               w-full mt-1 
               transition-all duration-300"
               >
-                <Link
-                  to={`/posts/${post.id}`}
+                <div
+                  onClick={() => navigate(`/posts/${post.id}`)}
                   className="block hover:bg-slate-200/50 dark:hover:bg-slate-700/40 
              rounded-lg transition-colors duration-200 
-             overflow-wrap-anywhere break-all whitespace-normal"
+             overflow-wrap-anywhere break-all whitespace-normal
+             cursor-pointer p-2"
                 >
-                  {post.content}
-                </Link>
+                  {renderTextWithLinks(post.content)}
+                </div>
               </div>
             )}
 

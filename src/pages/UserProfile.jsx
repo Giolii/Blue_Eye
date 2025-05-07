@@ -99,7 +99,7 @@ const UserProfile = () => {
       const response = await fetchUserPost(userId, nextPage);
       setPosts((prev) => [...prev, ...response.posts]);
       setHasMore(response.hasMore);
-      setPage(nextPage);
+      setPage(response.nextPage);
     } catch (error) {
       console.error("Error loading more posts:", error);
     } finally {

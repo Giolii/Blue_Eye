@@ -42,12 +42,12 @@ export const SocketProvider = ({ children }) => {
     const socketInstance = io(API_URL, { withCredentials: true });
 
     socketInstance.on("authenticated", (data) => {
-      console.log("User authenticated:", data);
+      // console.log("User authenticated:", data);
       loadNotifications();
     });
 
     socketInstance.on("notification", (data) => {
-      console.log("Received notification:", data);
+      // console.log("Received notification:", data);
 
       const notificationWithId = {
         ...data,

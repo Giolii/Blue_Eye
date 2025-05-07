@@ -179,7 +179,7 @@ const PostCard = ({ post, setPostsPage, openComments = false }) => {
           </div>
 
           {/* Post content */}
-          <div className="mb-3">
+          <div className="mb-3 ">
             {editPost ? (
               <div
                 className="transition-all duration-300 
@@ -228,13 +228,14 @@ const PostCard = ({ post, setPostsPage, openComments = false }) => {
             ) : (
               <div
                 className="text-slate-700 dark:text-slate-200 
-                            whitespace-pre-wrap break-all max-w-lg mt-1 
-                            transition-all duration-300"
+              w-full mt-1 
+              transition-all duration-300"
               >
                 <Link
                   to={`/posts/${post.id}`}
                   className="block hover:bg-slate-200/50 dark:hover:bg-slate-700/40 
-                           rounded-lg transition-colors duration-200 overflow-hidden"
+             rounded-lg transition-colors duration-200 
+             overflow-wrap-anywhere break-all whitespace-normal"
                 >
                   {post.content}
                 </Link>

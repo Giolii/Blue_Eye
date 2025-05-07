@@ -29,7 +29,7 @@ const PostFeed = () => {
       const nextPage = page + 1;
       const response = await fetchPosts(nextPage);
       setHasMore(response.hasMore);
-      setPage(response.nextPage);
+      setPage(nextPage);
     } catch (error) {
       console.error("Error loading more posts:", error);
     } finally {

@@ -54,6 +54,7 @@ export function AuthProvider({ children }) {
       const { user } = response.data;
 
       setCurrentUser(user);
+      verifyUser();
 
       return user;
     } catch (error) {

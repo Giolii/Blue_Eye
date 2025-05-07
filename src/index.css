@@ -1,6 +1,12 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
 
+.break-long-words {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
 @layer base {
   html {
     @apply bg-white;

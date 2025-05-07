@@ -235,8 +235,7 @@ const PostCard = ({ post, setPostsPage, openComments = false }) => {
                   onClick={() => navigate(`/posts/${post.id}`)}
                   className="block hover:bg-slate-200/50 dark:hover:bg-slate-700/40 
              rounded-lg transition-colors duration-200  
-             break-all overflow-hidden max-w-full
-
+             break-long-words overflow-hidden max-w-full
               cursor-pointer p-2"
                 >
                   {renderTextWithLinks(post.content)}

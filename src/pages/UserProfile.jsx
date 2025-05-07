@@ -99,7 +99,7 @@ const UserProfile = () => {
       const response = await fetchUserPost(userId, nextPage);
       setPosts((prev) => [...prev, ...response.posts]);
       setHasMore(response.hasMore);
-      setPage(response.nextPage);
+      setPage(nextPage);
     } catch (error) {
       console.error("Error loading more posts:", error);
     } finally {
@@ -266,8 +266,8 @@ const UserProfile = () => {
                       </div>
                     </div>
                   ) : (
-                    <div className="flex items-center  flex-col">
-                      <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-200 max-w-[100px] sm:max-w-[200px] ">
+                    <div className="flex items-center  flex-col ">
+                      <h1 className="text-lg truncate overflow-hidden font-bold text-slate-800 dark:text-slate-200 max-w-[150px] sm:max-w-[200px] ">
                         {user.name || user.username}
                       </h1>
                       {isCurrentUser && (

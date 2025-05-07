@@ -36,7 +36,7 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     verifyUser();
-  }, []);
+  }, [currentUser]);
 
   const login = async (emailOrUsername, password) => {
     try {
@@ -54,7 +54,7 @@ export function AuthProvider({ children }) {
       const { user } = response.data;
 
       setCurrentUser(user);
-      verifyUser();
+      // verifyUser();
 
       return user;
     } catch (error) {

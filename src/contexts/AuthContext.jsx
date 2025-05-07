@@ -36,7 +36,7 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     verifyUser();
-  }, [currentUser]);
+  }, []);
 
   const login = async (emailOrUsername, password) => {
     try {

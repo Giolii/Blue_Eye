@@ -25,6 +25,7 @@ const PostCard = ({ post, setPostsPage, openComments = false }) => {
 
   const { currentUser, followUser, followers, following, unfollowUser } =
     useAuth();
+
   const navigate = useNavigate();
 
   const handleUpdate = async () => {

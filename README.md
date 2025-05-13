@@ -1,6 +1,8 @@
 # Blue_Eye
 
+<p align="center">
 A modern social networking application built with Node.js, Express, and React with Vite.
+</p>
 
 <p align="center">
   <img src="https://img.freepik.com/free-psd/iris-eye-isolated_23-2151866152.jpg" width="300" alt="Blue_Eye Logo">

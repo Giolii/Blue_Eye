@@ -8,6 +8,10 @@ A modern social networking application built with Node.js, Express, and React wi
   <img src="https://img.freepik.com/free-psd/iris-eye-isolated_23-2151866152.jpg" width="300" alt="Blue_Eye Logo">
 </p>
 
+**Repositories:**
+- [Frontend (This repo)](https://github.com/Giolii/Blue_Eye)
+- [Backend](https://github.com/Giolii/Blue_Eye_Backend) 
+
 ## 📋 Overview
 
 Blue Eye is a full-stack social networking platform designed to connect people through a clean, intuitive interface. Built with performance and user experience in mind, it leverages modern web technologies to deliver a seamless social experience.

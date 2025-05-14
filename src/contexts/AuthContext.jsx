@@ -20,7 +20,7 @@ export function AuthProvider({ children }) {
       const response = await axios.get(`${API_URL}/auth/me`, {
         withCredentials: true,
       });
-      // setCurrentUser(response.data.user);
+      setCurrentUser(response.data.user);
       const response2 = await fetchFollowers(response.data.user.id);
       setFollowers(response2.followers);
       setFollowing(response2.following);
@@ -36,7 +36,7 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     verifyUser();
-  }, [currentUser]);
+  }, []);
 
   const login = async (emailOrUsername, password) => {
     try {
@@ -53,8 +53,7 @@ export function AuthProvider({ children }) {
       );
       const { user } = response.data;
 
-      // verifyUser();
-      setCurrentUser(user);
+      verifyUser();
 
       return user;
     } catch (error) {
@@ -77,8 +76,7 @@ export function AuthProvider({ children }) {
       );
 
       const { user } = response.data;
-
-      setCurrentUser(user);
+      verifyUser();
 
       return user;
     } catch (error) {
